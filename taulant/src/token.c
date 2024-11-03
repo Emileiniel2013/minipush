@@ -16,7 +16,7 @@ void redirection(const char *prompt, t_lexer *current, t_lexer **head, int *i);
 
 void redirection_less(const char *prompt, t_lexer **head, t_lexer **current, int *i);
 
-void double_qoute(char *quote_end, t_lexer **head, t_lexer **current, int *i);
+void double_qoute(char *prompt,char *quote_end, t_lexer **head, t_lexer **current, int *i);
 
 /*
 	lexer()
@@ -30,10 +30,10 @@ t_lexer *lexer(char *prompt)
 	t_lexer *current = NULL;
 	size_t len = 0;
 
-    char *tmp;
-    char *quote_end;
+    //char *tmp;
+    char *quote_end = NULL;
     int i = 0;
-    int quote_len = 0;
+    //int quote_len = 0;
 
 	while (prompt[i])
 	{
@@ -47,7 +47,8 @@ t_lexer *lexer(char *prompt)
 		}
         else if (prompt[i] =='\"')
         {
-            double_qoute(quote_end, &head, &current, &i);
+            i++;
+            double_qoute(prompt ,quote_end, &head, &current, &i);
         }
 		else if (prompt[i] == '>')
 		{
@@ -82,14 +83,16 @@ t_lexer *lexer(char *prompt)
 	return head;	
 }
 
-void double_qoute(char *quote_end, t_lexer **head, t_lexer **current, int *i) {
-    int quote_len;
+void double_qoute(char *prompt, char *quote_end, t_lexer **head, t_lexer **current, int *i)
+{
+    //int quote_len = 0;
+    char *tmp;
     quote_end = ft_strchr((&prompt[(*i)]) , '\"');
     if (quote_end)
     {
-        quote_len = quote_end - (prompt + (*i) - 1);
+        //quote_len = quote_end - (prompt + (*i) - 1);
         tmp = handle_quote(&prompt[(*i)]);
-        (*current) = create_tok("\"", TOKEN_DOUBLE_QUOTE);
+        (*current) = create_tok(tmp, TOKEN_DOUBLE_QUOTE);
         add_token(head, (*current));
         free(tmp);
         (*i) = quote_end - prompt + 1;

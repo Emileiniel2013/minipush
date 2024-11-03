@@ -15,12 +15,11 @@
 char *handle_quote(char *prompt)
 {
 
-    prompt++;
 	char *end;
 	char *string;
 
-	end = ft_strchr(prompt+1, 34);
-    string = malloc(ft_strlen(prompt) -2);
+	end = ft_strchr(prompt, 34);
+    string = malloc(ft_strlen(prompt));
     if(!string)
     {
         perror("failed to allocate memory for the new string\n");
@@ -28,8 +27,8 @@ char *handle_quote(char *prompt)
     }
     if (prompt && end)
     {
-        ft_memmove(string, prompt, end - prompt - 1);
-        string[end - prompt - 1] = '\0';
+        ft_memmove(string, prompt, end - prompt);
+        string[end - prompt] = '\0';
     }
     else
     {
