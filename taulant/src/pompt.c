@@ -21,8 +21,7 @@
 void prompt(t_msh *msh)
 {
 	char	*prompt;
-	t_lexer *tokens;
-	size_t i = 0;
+	//size_t i = 0;
 	if (!isatty(STDIN_FILENO))
  		return ;
 	while (1)
@@ -30,17 +29,9 @@ void prompt(t_msh *msh)
 		prompt = readline("Minishell~ ");
 		if (prompt == NULL)
 		{
-			perror("Failed initializing prompt");
 			break ;
-		}
-		if(ft_strncmp(prompt, "env", 4) == 0) // print the env 
-		{
-			while (msh->env[i])
-			{
-				printf("%s\n", msh->env[i]);
-				i++;
-			}
-		}
+        }
+        minishell_parser(&prompt, &msh);
 		if(ft_strncmp(prompt, "exit", 4) == 0)
 		{
 			free(prompt); // free the exit part
@@ -48,14 +39,23 @@ void prompt(t_msh *msh)
 		}
 		if (*prompt)
 			add_history(prompt);
-		tokens = lexer(prompt);
-		//free tokens
-		if(tokens)
-		{
-			print_token(tokens);
-			free_token(tokens);
-		}
-		
+
 		free(prompt);
 	}
 }
+//		}}
+//		tokens = lexer(prompt);
+		//free tokens
+//		if(tokens)
+//		{
+//			print_token(tokens);
+//			free_token(tokens);
+//		}
+//		if(ft_strncmp(prompt, "env", 4) == 0) // print the env
+//		{
+//			while (msh->env[i])
+//			{
+//				printf("%s\n", msh->env[i]);
+//				i++;
+//			}
+//		}

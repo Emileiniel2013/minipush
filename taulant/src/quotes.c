@@ -15,6 +15,7 @@
 char *handle_quote(char *prompt)
 {
 
+    prompt++;
 	char *end;
 	char *string;
 
@@ -27,7 +28,7 @@ char *handle_quote(char *prompt)
     }
     if (prompt && end)
     {
-        ft_memmove(string, prompt + 1, end - prompt - 1);
+        ft_memmove(string, prompt, end - prompt - 1);
         string[end - prompt - 1] = '\0';
     }
     else

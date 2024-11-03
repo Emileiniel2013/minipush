@@ -17,6 +17,33 @@
 	copy of the Enviroment Variables and return a copy
 	of it. 
 */
+t_msh *set_parameters(t_msh *msh)
+{
+    msh->var_lst = NULL;
+    msh->table = NULL;
+    msh->table_head = NULL;
+    msh->in_redir = NULL;
+    msh->out_redir = NULL;
+    msh->exit_code = 0;
+    msh->infd = STDIN_FILENO;
+    msh->outfd = STDOUT_FILENO;
+    return (msh);
+}
+
+
+t_msh *init_minishell(int ac, char *av[], char *envp[])
+{
+    t_msh       *msh;
+    char        **copy_env;
+
+    (void)ac;
+    (void )av;
+    copy_env = create_env(envp);
+    msh = malloc(sizeof(t_msh));
+    msh->env = copy_env;
+    set_parameters(msh);
+    return msh;
+}
 
 char **create_env(char **envp)
 {

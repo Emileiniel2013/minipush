@@ -10,5 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "include/mini_sh.h"
+#include "../include/mini_sh.h"
 
+void minishell_parser(char **prompt, t_msh **msh)
+{
+    t_lexer *token = NULL;
+    (void)msh;
+
+    token = lexer(*prompt);
+    if(token)
+		{
+			print_token(token);
+			free_token(token);
+		}
+}

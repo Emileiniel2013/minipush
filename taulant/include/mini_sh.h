@@ -49,17 +49,6 @@ typedef enum e_token {
 	TOKEN_UNKNOWN
 }	t_token;
 
-/*
-	COMMAND STRUCT
-*/
-typedef struct s_comands
-{
-    char    *cmd; // this is going to store the comand name
-    char    **args; // arguments of the comands
-	int		input_redir; // FD for input rederections
-	int		output_redir;// FD for output rederections
-    struct s_comand *next;
-}   t_comands;
 
 /*
 	LEXING STRUCT
@@ -90,19 +79,20 @@ typedef struct s_lexer
 	struct s_lexer		*next;
 }	t_lexer;
 
-/*
-	PARSING STRUCT
-*/
-typedef struct s_parser
+typedef struct t_simple_command
 {
-	t_lexer *list;
-}	t_parser;
+    char						*content;
+    struct t_simple_command		*next;
+}	t_cmd;
 
-typedef struct t_parstool
+typedef struct t_command_table
 {
-	
-} t_parstool;
-
+    //bool						leftpipe;
+    //bool						rightpipe;
+    t_cmd						*command;
+    t_cmd						*cmd_head;
+    struct t_command_table		*next;
+}		t_table;
 
 /* === MINISHELL STRUCT ===*/
 /*
@@ -110,14 +100,35 @@ typedef struct t_parstool
 *** comand info , comand table
 *** input information.
 */
-typedef struct s_msh
+//typedef struct s_msh
+//{
+//	char **env;
+//	char *input;
+//	t_comands *comands;
+//	t_lexer	  *list;
+//	t_token type;
+//}	t_msh;
+
+typedef struct t_minishell
 {
-	char **env;
-	char *input;
-	t_comands *comands;
-	t_lexer	  *list;
-	t_token type;
-}	t_msh;
+    t_table	*table;
+    t_table	*table_head;
+    char	**env;
+    char	**var_lst;
+    char	*out_redir;
+    int		outfd;
+    char	*in_redir;
+    int		infd;
+    int		exit_code;
+    //bool	success;
+   // bool	append_mode;
+}		t_msh;
+
+
+t_msh *init_minishell(int ac, char *av[], char *envp[]);
+t_msh *set_parameters(t_msh *msh);
+void minishell_parser(char **prompt, t_msh **msh);
+
 
 //loop
 void prompt(t_msh *msh);
