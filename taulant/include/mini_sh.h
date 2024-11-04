@@ -28,48 +28,24 @@
 # define BUFFER_SIZE 10000
 #endif
 
-// STRUCT's
-/* === comand === */
-/* contains info of the comand
-*/
-
 //=========== STRUCTS =====================
 
 typedef enum e_token {
-	TOKEN_COMMAND,
-	TOKEN_ARGUMENT,
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_RIDIRECTION_LESS,
-	TOKEN_RIDIRECTION_LESS_LESS, 	
-	TOKEN_RIDIRECTION_GREAT, 	
-	TOKEN_RIDIRECTION_GREAT_GREAT,
-	TOKEN_SINGLE_QUOTE,
-	TOKEN_DOUBLE_QUOTE,
-	TOKEN_UNKNOWN
+    COMMAND,
+    FILENAME,
+    ARGUMENT,
+    SINGLE_QUOTE,
+    DOUBLE_QUOTE,
+    PIPE,
+    REDIRIN,
+    REDIROUT,
+    REDIROUTAPP,
+    HEREDOC,
+    DELIMITER,
+    STRING,
+    APPEND,
+    UNKNOWN
 }	t_token;
-
-
-/*
-	LEXING STRUCT
-*/
-
-/*
-	EXECUTION 
-typedef struct s_redirect {
-	char *data;
-	e_token type;
-}
-
-typedef struct s_runconfig {
-	char *cmd;
-	int argc;
-	char **args;
-	t_list *redirect;
-	struct s_runconfig* pipe;
-}
-
-*/
 
 
 typedef struct s_lexer
@@ -127,7 +103,7 @@ typedef struct t_minishell
 
 t_msh *init_minishell(int ac, char *av[], char *envp[]);
 t_msh *set_parameters(t_msh *msh);
-void minishell_parser(char **prompt, t_msh **msh);
+void minishell_parser(char *prompt, t_msh *msh);
 
 
 //loop

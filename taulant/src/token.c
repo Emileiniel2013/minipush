@@ -41,7 +41,7 @@ t_lexer *lexer(char *prompt)
 			i++;
 		if(prompt[i] == '|')
 		{
-			current = create_tok("|", TOKEN_PIPE);
+			current = create_tok("|", PIPE);
 			add_token(&head, current);
 			i++;
 		}
@@ -71,16 +71,16 @@ t_lexer *lexer(char *prompt)
 			{
 				perror("malloc for buffer at lexer() FAILED !!");
 				return NULL;
-			
+
 			}
 			ft_strncpy(buffer, prompt + (i - len) , len);
 			buffer[len] = '\0';
-			current = create_tok(buffer, TOKEN_WORD);
+			current = create_tok(buffer, COMMAND);
 			add_token(&head, current);
 			free(buffer);
 		}
 	}
-	return head;	
+	return head;
 }
 
 void double_qoute(char *prompt, char *quote_end, t_lexer **head, t_lexer **current, int *i)
@@ -92,7 +92,7 @@ void double_qoute(char *prompt, char *quote_end, t_lexer **head, t_lexer **curre
     {
         //quote_len = quote_end - (prompt + (*i) - 1);
         tmp = handle_quote(&prompt[(*i)]);
-        (*current) = create_tok(tmp, TOKEN_DOUBLE_QUOTE);
+            (*current) = create_tok(tmp, DOUBLE_QUOTE);
         add_token(head, (*current));
         free(tmp);
         (*i) = quote_end - prompt + 1;
@@ -102,13 +102,13 @@ void double_qoute(char *prompt, char *quote_end, t_lexer **head, t_lexer **curre
 void redirection_less(const char *prompt, t_lexer **head, t_lexer **current, int *i) {
     if (prompt[(*i) + 1] == '<')
     {
-        (*current) = create_tok(create_redir_arr(prompt[(*i)]), TOKEN_RIDIRECTION_LESS_LESS);
+        (*current) = create_tok(create_redir_arr(prompt[(*i)]), REDIRIN);
         add_token(head, (*current));
         (*i) += 2;
     }
     else
     {
-        (*current) = create_tok(create_redir_arr(prompt[(*i)]), TOKEN_RIDIRECTION_LESS);
+        (*current) = create_tok(create_redir_arr(prompt[(*i)]), HEREDOC);
         add_token(head, (*current));
         (*i)++;
     }
@@ -117,13 +117,13 @@ void redirection_less(const char *prompt, t_lexer **head, t_lexer **current, int
 void redirection(const char *prompt, t_lexer *current, t_lexer **head, int *i) {
     if (prompt[(*i) + 1] == '>')
     {
-        current = create_tok(create_redir_arr(prompt[(*i)]), TOKEN_RIDIRECTION_GREAT_GREAT);
+        current = create_tok(create_redir_arr(prompt[(*i)]), REDIROUT);
         add_token(head, current);
         (*i) += 2;
     }
     else
     {
-        current = create_tok(create_redir_arr(prompt[(*i)]), TOKEN_RIDIRECTION_GREAT);
+        current = create_tok(create_redir_arr(prompt[(*i)]), APPEND);
         add_token(head, current);
         (*i)++;
     }

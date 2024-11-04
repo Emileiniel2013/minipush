@@ -29,27 +29,10 @@
 ***		This is the blue_print of the Minishell
 ***
 */
-
-
-void    leaks(void)
-{
-    system("leaks Minishell");
-}
-//int main(int ac, char *av[], char *envp[])
+//void    leaks(void)
 //{
-//	t_msh msh;
-// 	(void)ac;
-//	(void)av;
-//	(void)envp;
-//
-//
-//	msh.env = create_env(envp);
-//	atexit(leaks);
-//	prompt(&msh);
-//	free_env(&msh);
-//	return(0);
+//    system("leaks Minishell");
 //}
-
 
 int main(int ac, char *av[], char *envp[])
 {
@@ -59,6 +42,5 @@ int main(int ac, char *av[], char *envp[])
     //handle_signals();
     minish = init_minishell(ac, av, envp);
     prompt(minish);
-
 
 }
