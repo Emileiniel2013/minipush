@@ -33,17 +33,17 @@ int is_this(char c)
 t_token get_token_type(char c)
 {
 	if (c == '|')
-		return PIPE;
+		return TOKEN_PIPE;
 	else if (c == '<')
-		return REDIROUT;
+		return TOKEN_RIDIRECTION_LESS;
 	else if (c == '>')
-		return REDIRIN;
+		return TOKEN_RIDIRECTION_GREAT;
 	else if (ft_strncmp(&c, "<<", 2) == 0)
-		return ;
+		return TOKEN_RIDIRECTION_LESS_LESS;
 	else if (ft_strncmp(&c, ">>", 2) == 0)
-		return ;
+		return TOKEN_RIDIRECTION_GREAT_GREAT;
 	else
-		return ;
+		return TOKEN_UNKNOWN;
 }
 
 
