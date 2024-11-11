@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:32:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/04 19:05:10 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/11 12:19:35 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,6 @@ void	allocate_table(t_table **table, bool leftpipe);
 void	free_table(t_mini *minish);
 void	free_cmd(t_cmd *cmd);
 void	free_parser(t_mini *minish, t_tkn_lst *lst, t_table *table);
+void	ft_free(char **content);
 
 #endif

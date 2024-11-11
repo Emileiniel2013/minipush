@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 17:04:18 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/07 16:17:56 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/07 19:10:20 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,33 @@ char	*check_valid_cmd(char **paths, t_mini *minish)
 		i++;
 	}
 	return (path);
+}
+
+char	*ft_creat_execve_arg(char *content, int i)
+{
+	char	*arg;
+	int		j;
+	int		k;
+
+	j = 0;
+	k = 0;
+	arg = NULL;
+	if (i == 1)
+	{
+		if (ft_strchr(content, '/') != NULL)
+		{
+			while (content[j])
+			{
+				if (content[j] == '/')
+					k = j;
+				j++;
+			}
+			arg = ft_strdup(content + k);
+		}
+		else
+			arg = ft_strdup(content);
+	}
+	else
+		arg = ft_strdup(content);
+	return (arg);
 }

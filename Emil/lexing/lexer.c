@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/10/30 12:58:02 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/08 15:51:13 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,6 @@ t_tkn_lst	*process_input(char *line, t_mini *mini)
 	content = get_next_token(line, &quote_type, mini);
 	while (content != NULL)
 	{
-		if (content[0] == '\0')
-		{
-			free_tkn_lst(token_lst_head);
-			return (NULL);
-		}
 		type = identify_token(content, quote_type);
 		add_tkn_to_lst(&token_lst_head, content, type);
 		free(content);

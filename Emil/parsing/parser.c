@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/10/30 18:00:52 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/11 12:18:17 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,9 @@ int	handle_token(t_tkn_lst **tkn_lst, t_mini *minish, t_table **table)
 
 int	check_valid_redir_input(t_tkn_lst **token_lst, t_mini *minish)
 {
+	int	fd;
+
+	fd = 0;
 	if ((*token_lst)->next == NULL)
 		return (write_err(minish, 8, NULL), -1);
 	else if ((*token_lst)->next->tkn != STRING)
@@ -76,7 +79,13 @@ int	check_valid_redir_input(t_tkn_lst **token_lst, t_mini *minish)
 	else if ((*token_lst)->tkn == REDIROUT || (*token_lst)->tkn == REDIROUTAPP)
 	{
 		if (minish->out_redir)
+		{
+			fd = open(minish->out_redir, O_CREAT, 0644);
+			if (fd < 0)
+				return (write_err(minish, 7, NULL), -1);
+			close(fd);
 			free(minish->out_redir);
+		}
 		minish->out_redir = ft_strdup((*token_lst)->next->content);
 	}
 	(*token_lst)->next->tkn = FILENAME;

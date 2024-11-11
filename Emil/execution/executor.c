@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 11:41:14 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/07 18:13:46 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/11 11:37:24 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	mini_main(t_mini *minish)
 		if (minish->table->rightpipe)
 			pipe(pipefd);
 		handle_shlvl(minish, '+');
+		signal(SIGINT, SIG_DFL);
 		pid = fork();
 		if (pid == 0)
 			child_execution(minish, prevpipefd, pipefd);
@@ -42,9 +43,6 @@ void	mini_main(t_mini *minish)
 
 void	child_execution(t_mini *minish, int prevpipefd, int *pipefd)
 {
-	int	status;
-
-	status = 0;
 	if (minish->table->leftpipe)
 	{
 		dup2(prevpipefd, STDIN_FILENO);
@@ -65,6 +63,7 @@ void	child_execution(t_mini *minish, int prevpipefd, int *pipefd)
 		minish->redirfd = minish->outfd;
 	}
 	executor(minish);
+	exit_minish(minish);
 }
 
 void	executor(t_mini *minish)
