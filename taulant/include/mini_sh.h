@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:48:37 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 14:47:58 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 18:13:31 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ typedef struct t_simple_command
 
 typedef struct t_command_table
 {
-    //bool						leftpipe;
-    //bool						rightpipe;
+    bool						leftpipe;
+    bool						rightpipe;
 	t_cmd						*command;
 	t_cmd						*cmd_head;
 	struct t_command_table		*next;
@@ -141,7 +141,7 @@ int	is_this(char c);
 //FREE TOKEN 
 void	free_token(t_lexer *head);
 //========= PARSER ==========
-void minishell_parser(char **prompt, t_msh **msh);
+void minishell_parser(char *prompt, t_msh *msh);
 
 
 

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 16:16:58 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 17:46:29 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 17:58:32 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	prompt(t_msh *msh)
 		{
 			break ;
 		}
-		minishell_parser(&prompt, &msh);
+		minishell_parser(prompt, msh);
 		if (ft_strncmp(prompt, "exit", 4) == 0)
 		{
 			free(prompt);
