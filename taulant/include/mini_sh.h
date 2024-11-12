@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:48:37 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 12:29:55 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 14:47:58 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void	add_token(t_lexer **tokens, t_lexer *new_token);
 char	*handle_quote(char *prompt);
 
 //REDIRECTION
-char	*create_redir_arr(char c);
+// char	*create_redir_arr(char c);
 
 //TOKEN UTILS
 //print token's

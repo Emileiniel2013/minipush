@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 16:16:58 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 12:43:21 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 17:46:29 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ void	prompt(t_msh *msh)
 		if (ft_strncmp(prompt, "exit", 4) == 0)
 		{
 			free(prompt);
+			//free(msh);==> we need to free the msh
 			break ;
 		}
 		if (*prompt)
 			add_history(prompt);
 		free(prompt);
 	}
-	
 }
 //		}}
 //		tokens = lexer(prompt);

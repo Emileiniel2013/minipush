@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:41:30 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 13:59:02 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 17:30:09 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	create_comand_token(char *prompt, t_lexer **head, t_lexer **current,
 	buffer[len] = '\0';
 	(*current) = create_tok(buffer, COMMAND);
 	add_token(head, (*current));
+	// free(current);
 	free(buffer);
 }
 
@@ -87,16 +88,21 @@ void	double_qoute(char *prompt, t_lexer **head, t_lexer **current, int *i)
 void	redirection_less(const char *prompt, t_lexer **head, t_lexer **current,
 		int *i)
 {
+	//char *redir_arr;
 	if (prompt[(*i) + 1] == '<')
 	{
-		(*current) = create_tok(create_redir_arr(prompt[(*i)]), HEREDOC);
+		//redir_arr = create_redir_arr(prompt[(*i)]);
+		(*current) = create_tok("<<", HEREDOC);
 		add_token(head, (*current));
+		//free(redir_arr);
 		(*i) += 2;
 	}
 	else
 	{
-		(*current) = create_tok(create_redir_arr(prompt[(*i)]), REDIRIN);
+		//redir_arr = create_redir_arr(prompt[(*i)]);
+		(*current) = create_tok("<", REDIRIN);
 		add_token(head, (*current));
+		//free(redir_arr);
 		(*i)++;
 	}
 }
@@ -104,18 +110,21 @@ void	redirection_less(const char *prompt, t_lexer **head, t_lexer **current,
 void	redirection(const char *prompt, t_lexer *current, t_lexer **head,
 		int *i)
 {
+	//char *redir_arr;
 	if (prompt[(*i) + 1] == '>')
 	{
-		current = create_tok(create_redir_arr(prompt[(*i)]),
-				APPEND);
+		//redir_arr = create_redir_arr(prompt[(*i)]);
+		current = create_tok(">>", APPEND);
 		add_token(head, current);
+		//free(redir_arr);
 		(*i) += 2;
 	}
 	else
 	{
-		current = create_tok(create_redir_arr(prompt[(*i)]),
-				REDIROUT);
+		//redir_arr = create_redir_arr(prompt[(*i)]);
+		current = create_tok(">", REDIROUT);
 		add_token(head, current);
+		//free(redir_arr);
 		(*i)++;
 	}
 }
@@ -131,4 +140,5 @@ void	free_token(t_lexer *head)
 		free(tmp->data);
 		free(tmp);
 	}
+	free(head);
 }

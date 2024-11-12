@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 18:01:48 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 12:24:23 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 14:48:31 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,65 +64,65 @@ int	ft_isspace(char c)
 	return (c == ' ');
 }
 
-char	*create_redir_arr(char c)
-{
-	char	*arr;
+// char	*create_redir_arr(char c)
+// {
+// 	char	*arr;
 
-	arr = malloc(2 * sizeof(char));
-	if (!arr)
-	{
-		perror("malloc of red_arr failed->> create_red_arr[]");
-		return (NULL);
-	}
-	arr[0] = c;
-	arr[1] = '\0';
-	return (arr);
-}
+// 	arr = malloc(2 * sizeof(char));
+// 	if (!arr)
+// 	{
+// 		perror("malloc of red_arr failed->> create_red_arr[]");
+// 		return (NULL);
+// 	}
+// 	arr[0] = c;
+// 	arr[1] = '\0';
+// 	return (arr);
+// }
 
-void	print_token(t_lexer *tokens)
-{
-	char *str;
-	// printf("ERROR HERE\n");
-	while (tokens)
-	{
-		// printf("ERROR HERE1\n");
-		if (tokens->type == COMMAND)
-		{
-			// printf("ERROR HERE2\n");
-		str = "COMMAND";
-		}
-		else if (tokens->type == PIPE)
-		{
-			// printf("ERROR HERE3\n");
-			str = "PIPE";
-		}
-		else if (tokens->type == REDIROUT)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_OUT";
-		}
-		else if (tokens->type == REDIRIN)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_IN";
-		}
-		else if (tokens->type == HEREDOC)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_LESS_LESS";
-		}
-		else if (tokens->type == APPEND)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_GREAT_GREAT";
-		}
-		else
-		{
-			// printf("ERROR HERE5\n");
-			str = "UNKNOWN";
-		}
-		// printf("ERROR HERE666\n");
-		printf("Token : %s  Type: %s\n", tokens->data, str);
-		tokens = tokens->next;
-	}
-}
+// void	print_token(t_lexer *tokens)
+// {
+// 	char *str;
+// 	// printf("ERROR HERE\n");
+// 	while (tokens)
+// 	{
+// 		// printf("ERROR HERE1\n");
+// 		if (tokens->type == COMMAND)
+// 		{
+// 			// printf("ERROR HERE2\n");
+// 		str = "COMMAND";
+// 		}
+// 		else if (tokens->type == PIPE)
+// 		{
+// 			// printf("ERROR HERE3\n");
+// 			str = "PIPE";
+// 		}
+// 		else if (tokens->type == REDIROUT)
+// 		{
+// 			// printf("ERROR HERE4\n");
+// 			str = "RIDIRECTION_OUT";
+// 		}
+// 		else if (tokens->type == REDIRIN)
+// 		{
+// 			// printf("ERROR HERE4\n");
+// 			str = "RIDIRECTION_IN";
+// 		}
+// 		else if (tokens->type == HEREDOC)
+// 		{
+// 			// printf("ERROR HERE4\n");
+// 			str = "RIDIRECTION_LESS_LESS";
+// 		}
+// 		else if (tokens->type == APPEND)
+// 		{
+// 			// printf("ERROR HERE4\n");
+// 			str = "RIDIRECTION_GREAT_GREAT";
+// 		}
+// 		else
+// 		{
+// 			// printf("ERROR HERE5\n");
+// 			str = "UNKNOWN";
+// 		}
+// 		// printf("ERROR HERE666\n");
+// 		printf("Token : %s  Type: %s\n", tokens->data, str);
+// 		tokens = tokens->next;
+// 	}
+// }
