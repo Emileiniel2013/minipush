@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 16:16:58 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 17:58:32 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 18:51:21 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 	1->checking if the input comes wrom a interactiv terminal
 	2-> the input its saved in prompt
 */
-
-
 void	prompt(t_msh *msh)
 {
 	char	*prompt;

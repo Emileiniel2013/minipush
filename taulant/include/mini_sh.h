@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:48:37 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 18:13:31 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 18:26:35 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@
 
 //=========== STRUCTS =====================
 
-typedef enum e_token {
+typedef enum e_token
+{
 	COMMAND,
 	FILENAME,
 	ARGUMENT,
@@ -71,8 +72,8 @@ typedef struct t_simple_command
 
 typedef struct t_command_table
 {
-    bool						leftpipe;
-    bool						rightpipe;
+	bool						leftpipe;
+	bool						rightpipe;
 	t_cmd						*command;
 	t_cmd						*cmd_head;
 	struct t_command_table		*next;
@@ -117,64 +118,25 @@ void		redirection_less(const char *prompt, t_lexer **head,
 void		double_qoute(char *prompt,
 				t_lexer **head, t_lexer **current, int *i);
 
-void	create_comand_token(char *prompt, t_lexer **head, t_lexer **current,
-		int *i);
+void		create_comand_token(char *prompt, t_lexer **head, t_lexer **current,
+				int *i);
 
 //TOKEN CREATION
-t_lexer	*create_tok(char *data, t_token type);
-void	add_token(t_lexer **tokens, t_lexer *new_token);
+t_lexer		*create_tok(char *data, t_token type);
+void		add_token(t_lexer **tokens, t_lexer *new_token);
 
 //DOUBLE QUOTES 
-char	*handle_quote(char *prompt);
-
-//REDIRECTION
-// char	*create_redir_arr(char c);
-
+char		*handle_quote(char *prompt);
 //TOKEN UTILS
 //print token's
-void	print_token(t_lexer *tokens);
+void		print_token(t_lexer *tokens);
 
-int	ft_isspace(char c);
+int			ft_isspace(char c);
 
-int	is_this(char c);
+int			is_this(char c);
 
 //FREE TOKEN 
-void	free_token(t_lexer *head);
+void		free_token(t_lexer *head);
 //========= PARSER ==========
-void minishell_parser(char *prompt, t_msh *msh);
-
-
-
-
-
-
-//
-//
-////loop
-//void prompt(t_msh *msh);
-//
-////enviroment
-//char **create_env(char **envp);
-//void free_env(t_msh *msh);
-//
-//// LEXING
-//int ft_isspace(char c); // chec if it is a white space
-//
-//int is_this(char c);  // checks the delimeter
-//
-//t_token get_token_type(char c); // check what type of token is
-//
-//t_lexer *create_tok(char *data, t_token type); // creates a token
-//
-//void add_token(t_lexer **tokens, t_lexer *new_token); // ad the token to the list of tokens
-//
-//char *create_redir_arr(char c);
-//
-//t_lexer *lexer(char *prompt);
-//
-//void free_token(t_lexer *head);
-//
-//void print_token(t_lexer *tokens);
-//
-//char *handle_quote(char *start);
+void		minishell_parser(char *prompt, t_msh *msh);
 #endif
