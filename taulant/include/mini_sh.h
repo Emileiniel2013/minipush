@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:48:37 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/11 10:14:53 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:29:55 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10000
 # endif
-
-// STRUCT's
-/* === comand === */
-/* contains info of the comand
-*/
 
 //=========== STRUCTS =====================
 
@@ -123,12 +118,36 @@ void		double_qoute(char *prompt,
 				t_lexer **head, t_lexer **current, int *i);
 
 void	create_comand_token(char *prompt, t_lexer **head, t_lexer **current,
-		int *i)
+		int *i);
 
+//TOKEN CREATION
+t_lexer	*create_tok(char *data, t_token type);
+void	add_token(t_lexer **tokens, t_lexer *new_token);
+
+//DOUBLE QUOTES 
+char	*handle_quote(char *prompt);
+
+//REDIRECTION
+char	*create_redir_arr(char c);
+
+//TOKEN UTILS
+//print token's
+void	print_token(t_lexer *tokens);
+
+int	ft_isspace(char c);
+
+int	is_this(char c);
+
+//FREE TOKEN 
+void	free_token(t_lexer *head);
 //========= PARSER ==========
+void minishell_parser(char **prompt, t_msh **msh);
 
 
-//void minishell_parser(char **prompt, t_msh **msh);
+
+
+
+
 //
 //
 ////loop

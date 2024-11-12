@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:41:30 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/11 10:12:32 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/12 13:59:02 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ t_lexer	*lexer(char *prompt)
 	t_lexer	*current;
 	int		i;
 
+	head = NULL;
+	current = NULL;
 	i = 0;
 	while (prompt[i])
 	{
@@ -67,10 +69,10 @@ void	create_comand_token(char *prompt, t_lexer **head, t_lexer **current,
 
 void	double_qoute(char *prompt, t_lexer **head, t_lexer **current, int *i)
 {
+	i++;
 	char	*quote_end;
 	char	*tmp;
 
-	i++;
 	quote_end = ft_strchr((&prompt[(*i)]), '\"');
 	if (quote_end)
 	{
