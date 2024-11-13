@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 17:30:21 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/13 20:02:29 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/13 20:28:35 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,27 @@ bool	count_allocate_commands(t_lexer **temp, t_table **new_node,
 
 bool	add_command_in_table(t_table *new_node, t_table *table, int cmd_len, t_lexer *token)
 {
-	t_lexer		*tempo;
+	t_lexer		*tempo = NULL;
 	t_table		*current;
 	int			i;
 
 	i = 0;
 	tempo = token;
-	while (tempo->data && i < cmd_len)
+	while (tempo && i < cmd_len)
 	{
 		new_node->command[i].content = ft_strdup(tempo->data);
-		new_node->command[i].next = NULL;
+		if (!new_node->command[i].content)
+        {
+            // Free previously allocated memory in case of failure
+            while (i > 0)
+            {
+				free(new_node->command[--i].content);
+            }
+            free(new_node->command);
+            free(new_node);
+            return (false);
+        }
+	//	new_node->command[i].next = NULL;
 		tempo = tempo->next;
 		i++;
 	}

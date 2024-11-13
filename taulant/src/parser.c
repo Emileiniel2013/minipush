@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 15:09:14 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/13 17:32:08 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/13 20:25:46 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	minishell_parser(char *prompt, t_msh *msh)
 	while (token)
 	{
 		token_to_table(&token, &table, msh);
-		printf("here");
+		printf("here\n");
 		token = token->next;
 	}
 	free_token(token);
@@ -48,24 +48,26 @@ bool	token_to_table(t_lexer **token, t_table **table, t_msh *msh)
 	temp = *token;
 	if (temp->type == PIPE)
 	{
-		//printf("here2");
+		printf("here2\n");
 		if (!trip_to_table_pipe(*token, *table, msh))
 		{
 			printf("false main table function");
 			return (false);
 		}
-		//printf("here3");
+		printf("here3\n");
 	}
 	else if (temp->type == COMMAND)
 	{
+		printf("here3333333\n");
 		if (!trip_to_table_commad(*token, *table, msh))
 		{
 			printf("false main table function");
 			return (false);
+			printf("here444444444\n");
 		}
 	}
 	msh->table = *table;
 	msh->table_head = *table;
-	printf("true !!");
+	printf("true 444555555555==========!!\n");
 	return (true);
 }
