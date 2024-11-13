@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 16:16:58 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 18:51:21 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/13 19:55:00 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,20 @@ void	prompt(t_msh *msh)
 		}
 		if (*prompt)
 			add_history(prompt);
-		free(prompt);
+		if (msh->table && handle_redirections(msh) != -1)
+		{
+			if (!msh->table->rightpipe && check_builtin(msh))
+				executor(msh);
+			else
+				mini_main(msh);
+		}
+		restore_redirections(msh);
+		if (msh->table_head)
+			free_table(msh);
 	}
+	free_mini(msh, false);
 }
+
 //		}}
 //		tokens = lexer(prompt);
 // free tokens
