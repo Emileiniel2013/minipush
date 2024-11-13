@@ -6,10 +6,12 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 19:28:35 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 19:29:22 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/13 15:37:45 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/mini_sh.h"
 
-void add_tokens_to_table(t_table 
+// void	add_tokens_to_table(t_table *table)
+// {
+// }
