@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:48:37 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/12 18:26:35 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/13 17:26:45 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,4 +139,12 @@ int			is_this(char c);
 void		free_token(t_lexer *head);
 //========= PARSER ==========
 void		minishell_parser(char *prompt, t_msh *msh);
+
+bool		token_to_table(t_lexer **token, t_table **table, t_msh *msh);
+
+bool		count_allocate_commands(t_lexer **temp, t_table **new_node,
+				int *cmd_len);
+
+bool		add_command_in_table(t_table **new_node, t_table **current,
+				int *cmd_len, t_table **table);
 #endif

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 15:09:14 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/13 16:56:46 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/13 17:32:08 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,87 +68,4 @@ bool	token_to_table(t_lexer **token, t_table **table, t_msh *msh)
 	msh->table_head = *table;
 	printf("true !!");
 	return (true);
-}
-
-bool	trip_to_table_pipe(t_lexer *token, t_table *table, t_msh *msh)
-{
-	t_table		*new_node;
-	t_table		*current;
-
-	(void)msh;
-	check_valid_pipe(token, table);
-	current = table;
-	while (current && current->next)
-		current = current->next;
-	new_node = malloc(sizeof(t_table));
-	if (new_node == NULL)
-		return (false);
-	new_node->leftpipe = true;
-	new_node->rightpipe = false;
-	new_node->next = NULL;
-	new_node->command = NULL;
-	if (current)
-	{
-		current->rightpipe = true;
-		current->next = new_node;
-	}
-	else
-		table = new_node;
-	return (true);
-}
-
-bool	check_valid_pipe(t_lexer *token, t_table *table)
-{
-	if (token->type == PIPE && token->next->type != COMMAND)
-		return (false);
-	else if (token->type == PIPE && !table)
-		return (false);
-	else if (token->type == PIPE && !token->next)
-		return (false);
-	return (true);
-}
-
-bool	trip_to_table_command(t_lexer *token, t_table *table)
-{
-	t_lexer		*temp;
-	t_table		*current;
-	t_table		*new_node;
-	int			cmd_len;
-
-	temp = token;
-	count_allocate_commands(&temp, &cmd_len, &new_node);
-	add_commad_in_table(&new_node, &current, &table, &cmd_len);
-}
-
-bool	count_allocate_commands(t_lexer **temp, t_table **new_node, int *cmd_len)
-{
-	cmd_len = 0;
-	while ((*temp) && (*temp)->type == COMMAND)
-	{
-	 	cmd_len++;
-	 	(*temp) = (*temp)->next;
-	}
-	new_node = malloc(sizeof(t_table));
-	if (!new_node)
-		return (false);
-	(*new_node)->command = malloc(sizeof(char *) * (cmd_len + 1));
-	if (!(*new_node)->command)
-	{
-		free(new_node);
-		return (false);
-	}
-}
-
-bool	add_command_in_table(t_table **new_node, t_table **current, int *cmd_len,
-						t_table **table)
-{
-	t_lexer		*tempo;
-	int			i;
-
-	i = 0;
-	while(i < cmd_len)
-	{
-		(*new_node)->command[i] =	
-	}
-	
 }
