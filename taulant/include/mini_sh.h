@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:48:37 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/13 20:19:33 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/14 15:06:06 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,18 +140,40 @@ void		free_token(t_lexer *head);
 //========= PARSER ==========
 void		minishell_parser(char *prompt, t_msh *msh);
 
-bool		token_to_table(t_lexer **token, t_table **table, t_msh *msh);
+// bool		token_to_table(t_lexer **token, t_table **table, t_msh *msh);
 
-//========= PARSER PIPE ==========
-bool		trip_to_table_pipe(t_lexer *token, t_table *table, t_msh *msh);
-bool		check_valid_pipe(t_lexer *token, t_table *table);
-//========= PARSER COMMAND ==========
-bool		trip_to_table_commad(t_lexer *token, t_table *table, t_msh *msh);
+// //========= PARSER PIPE ==========
+// bool		trip_to_table_pipe(t_lexer *token, t_table *table, t_msh *msh);
+// bool		check_valid_pipe(t_lexer *token, t_table *table);
+// //========= PARSER COMMAND ==========
+// bool		trip_to_table_commad(t_lexer *token, t_table *table, t_msh *msh);
 
-bool		add_command_in_table(t_table *new_node, t_table *table, int cmd_len, t_lexer *token);
+// bool		add_command_in_table(t_table *new_node, t_table *table, int cmd_len, t_lexer *token);
 
-bool		count_allocate_commands(t_lexer **temp, t_table **new_node,
-				int *cmd_len);
+// bool		count_allocate_commands(t_lexer **temp, t_table **new_node,
+// 				int *cmd_len);
+
+void  minishell_parser(char *prompt, t_msh *msh);
+int		pass_to_table(t_lexer **tkn_lst, t_msh *msh, t_table **table);
+void expand_env_vars(char **content, t_msh *minish);
+void append_remainder(char **expanded_string, char **content, int pos);
+void replace_varname_wtih_var(char **expanded_string, char **env);
+int ft_strcmp(char *s1, char *s2); 
+char *ft_getenv(t_msh *mini, char *env);
+char **copy_env(char **envp);
+char *check_and_expand_env(char **content, int *i, t_msh *minish);
+char *check_string(char **content, t_msh *minish);
+int	handle_type_of_redir(t_lexer **token_lst, t_msh *msh);
+void	add_tokens_to_table(t_table **table, t_lexer *token_lst);
+int	handle_type_of_redir_type2(t_lexer **token_lst, t_msh *msh);
+int	checd_valid(t_lexer *token_lst, t_table *table, t_msh *msh);
+int	trip_to_table_pipe(t_lexer *token_lst, t_table *table, t_msh *msh);
+
+
+void	write_err(t_msh *minish, int code, char *arg);
+void	write_simple_err(int code);
+void	write_arg_err(int code, char *arg);
+int	loop(char *separator, int fd);
 
 
 

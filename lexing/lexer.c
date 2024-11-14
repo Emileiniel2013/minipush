@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token.c                                            :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 17:41:30 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/14 16:03:35 by tndreka          ###   ########.fr       */
+/*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
+/*   Updated: 2024/11/14 16:42:13 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/mini_sh.h"
+#include "../includes/lexer.h"
 
 t_lexer	*lexer(char *prompt)
 {
@@ -65,7 +65,7 @@ void	create_comand_token(char *prompt, t_lexer **head, t_lexer **current,
 		return ;
 	ft_strncpy(buffer, prompt + ((*i) - len), len);
 	buffer[len] = '\0';
-	(*current) = create_tok(buffer, COMMAND);
+	(*current) = create_tok(buffer, STRING);
 	add_token(head, (*current));
 	free(buffer);
 }
