@@ -3,15 +3,77 @@
 /*                                                        :::      ::::::::   */
 /*   main_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/11 12:18:36 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/16 16:12:16 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
 
+
+// bool exp_env_vars(char **content, t_mini *msh)
+// {
+// 	char *expanded_string;
+// 	char *prefix;
+// 	char *env_exit_code;
+// 	char *variable_name;
+// 	char *get_value;
+// 	int i = 0;
+// 	int start = 0;	
+
+// 	expanded_string = ft_strdup("");
+// 	 if (*content == NULL || **content == '\0')  // Check if the content is empty
+//         return true;
+// 	 printf("Initial content: %s\n", *content);
+// 	while((*content)[i])
+// 	{
+// 		while ((*content)[i] && (*content)[i] != '$')
+// 			i++;
+// 		printf("here\n");
+// 		printf("skip the dollar sign\n");
+// 		if (!(*content)[i])
+// 			break;
+// 		prefix = ft_strndup(*content, i);
+// 		printf("Prefix: %s\n", prefix);
+// 		expanded_string = ft_strjoin(expanded_string, prefix);
+// 		printf("Exit code: %s\n", env_exit_code);
+// 		free(prefix); // free prefix
+// 		if ((*content)[i] == '?'){
+// 			env_exit_code = ft_itoa(msh->exit_code);
+// 		expanded_string = ft_strjoin(expanded_string, env_exit_code);
+// 		i = i + 2;
+// 		continue;
+// 		}
+// 		if ((*content)[i] == '$')
+// 		{
+// 			start = i + 1;
+// 			i++;
+// 			while ( i < ft_strlen(*content) && (ft_isalnum((*content)[i]) || (*content)[i] == '_'))
+// 				i++;
+// 			//while(isalnum(*content[i]) || *content[i] == '_')
+// 			variable_name = ft_strndup(*content + start, i - start);
+// 			printf("Variable name: %s\n", variable_name);
+// 			get_value = ft_getenv(msh, variable_name);
+// 			free(variable_name);
+// 			if (get_value)
+// 			{
+// 				 printf("Variable value: %s\n", get_value);
+// 				expanded_string = ft_strjoin(expanded_string, get_value);
+// 				free(get_value);
+// 			}
+// 		}
+// 		if ((*content)[i])
+// 		{
+// 			expanded_string = ft_strjoin(expanded_string, *content + i);
+// 		}		
+// 	}
+// 	 printf("Expanded string: %s\n", expanded_string);
+// 	free(*content);
+// 	*content = expanded_string;
+// 	return (true);
+// }
 char	*check_and_expand_env(char **content, int *i, t_mini *minish)
 {
 	int		j;

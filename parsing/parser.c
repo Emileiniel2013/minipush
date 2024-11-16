@@ -6,21 +6,20 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/15 14:44:57 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/16 13:30:54 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
 
-
 void	minishell_parser(char *line, t_mini *minish)
 {
 	t_lexer		*token;
 	t_table		*table;
-	int			i;
+	// int			i;
 	bool		res;
 
-	i = 0;
+//	i = 0;
 	table = NULL;
 	token = lexer(line);
 	res = false;
@@ -29,12 +28,12 @@ void	minishell_parser(char *line, t_mini *minish)
 		return ;
 	while (token)
 	{
-		i = handle_token(&token, minish, &table);
-		//if (i == -1)
-		//{
-		//	free_parser(minish, lst_head, table);
-		//	return ;
-		//}
+		if(!pass_to_table(&token, minish, &table))
+		{
+			//if (i == -1)
+			free_parser(minish, token, table);
+			return ;
+		}
 		token = token->next;
 	}
 	free_tkn_lst(token);
@@ -42,63 +41,61 @@ void	minishell_parser(char *line, t_mini *minish)
 	minish->table_head = table;
 }
 
+
 // void	minishell_parser(char *line, t_mini *minish)
 // {
 // 	t_lexer		*token;
-// 	t_lexer		*lst_head;
+// //	t_lexer		*lst_head;
 // 	t_table		*table;
 // 	int			i;
 
 // 	table = NULL;
 // 	i = 0;
-// 	tkn_lst = lexer(line);
-// 	lst_head = tkn_lst;
-// 	if (!tkn_lst)
+// 	token = lexer(line);
+// 	//lst_head = tkn_lst;
+// 	if (!token)
 // 		return ;
-// 	while (tkn_lst)
+// 	while (token)
 // 	{
-// 		i = handle_token(&tkn_lst, minish, &table);
+// 		i = handle_token(&token, minish, &table);
 // 		if (i == -1)
 // 		{
-// 			free_parser(minish, lst_head, table);
+// 			free_parser(minish, token, table);
 // 			return ;
 // 		}
-// 		tkn_lst = tkn_lst->next;
+// 		token = token->next;
 // 	}
-// 	free_tkn_lst(lst_head);
+// 	free_tkn_lst(token);
 // 	minish->table = table;
 // 	minish->table_head = table;
 // }
 
+//======== pAss tO tAblE FuNctiOns =========
+//** This function will check the type of the token and call the appropriate
+
 bool pass_to_table(t_lexer **token, t_mini *minish, t_table **table)
 {
-	t_lexer		*tmp;
-	bool		res;
-
+	bool res;
+		
 	res = false;
-	tmp = (*token);
-	if (NULL == (*token))
-	{
-		printf("no token\n");
+	if((*token)->data == NULL)
 		return (res);
-	}
-	if (tmp->type == PIPE)
-	{
-		res = trip_to_table_pipe(token, minish, table);
-	}
-	else if (tmp->type == STRING || tmp->type == DOUBLE_QUOTE)
-		expand_env_vars(&tmp->data, minish);
-	else if (tmp->type == REDIROUT || tmp->type == REDIROUTAPP || tmp->type == REDIRIN)
-	{
-		res = trip_to_table_redir(token, minish, table);
-	}
-	else if (tmp->type == HEREDOC)
-	{
-		res = trip_to_table_heredoc(token, minish, table);
-	}
-	add_token_to_table(table, tmp);
+	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE)
+		res = exp_env_vars(&(*token)->data, minish);
+	//else if ((*token)->type == PIPE)
+	//	res = pas_to_table_pipe(*token, *table, minish);
+	//else if ((*token)->type == HEREDOC)
+	//	res = pas_to_table_heredoc(*token, minish);
+	//else if ((*token)->type == REDIRIN || (*token)->type == REDIROUT)
+	//	res = pas_to_table_redir(*token, minish);
+	//else if ((*token)->type == REDIROUTAPP)
+	//	res = pas_to_table_redirapp(*token, minish);
+	add_token_to_table(table, *token);
+	
 	return (true);
 }
+
+
 
 // int	handle_token(t_lexer **tkn_lst, t_mini *minish, t_table **table)
 // {
