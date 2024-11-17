@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/17 03:02:25 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/17 15:16:10 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,24 @@ bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table)
 	res = true;
     if ((*token)->data == NULL)
         return false;
-
-    if ((*token)->type == STRING)
+    if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE || (*token)->type == SINGLE_QUOTE)
     {
         if(!exp_env_vars(&(*token)->data, minish))
 			return false;
 		add_token_to_table(table, *token);	
     }
 	if ((*token)->type == PIPE)
-	{
 		res = handle_pipe(*token, minish, *table);
-		//add_token_to_table(table, *token);	
-	}
-	if (!res)
-	{
-		printf("Error putting to table this TOken %d\n", (*token)->type);
-		return false;
-	}
+	else if ((*token)->type == HEREDOC)
+    {
+        res = pas_to_table_heredoc(token, minish);
+		add_token_to_table(table, *token);
+    }
+    else if ((*token)->type == REDIRIN || (*token)->type == REDIROUT || (*token)->type == REDIROUTAPP)
+    {
+        res = pas_to_table_redir(token, minish);
+		add_token_to_table(table, *token);
+    }
 	return (true);
 }
 
@@ -99,7 +100,7 @@ int	check_valid_redir_input(t_lexer **token_lst, t_mini *minish)
 		minish->append_mode = true;
 	return (0);
 }
-
+//==============================================================================
 // int	handle_heredoc(t_lexer **token_lst, t_mini *minish)
 // {
 // 	char	*delimiter;
@@ -124,7 +125,7 @@ int	check_valid_redir_input(t_lexer **token_lst, t_mini *minish)
 // 	close(fd);
 // 	return (0);
 // }
-
+//============================================================================
 // bool put_to_table_pipe(t_table **table, t_lexer **token, t_mini *minish)
 // {
 // 	t_table *node;
@@ -183,11 +184,5 @@ bool handle_pipe(t_lexer *token, t_mini *minish, t_table *table)
 	}
 	else
 		table = node;
-	return (true);
-	// if (!put_to_table_pipe(table, token, minish))
-	// {
-	// 	printf("FAIL TABLE PIPE");	
-	// 	return (false);
-	// }
 	return (true);
 }
