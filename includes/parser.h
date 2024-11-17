@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:32:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/16 16:38:01 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/17 01:40:06 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,18 @@ bool exp_env_vars(char **content, t_mini *msh);
 int		check_valid_redir_input(t_lexer **token_lst, t_mini *minish);
 int		handle_heredoc(t_lexer **token_lst, t_mini *minish);
 bool	heredoc_loop(char *delimiter, int fd);
-int		check_valid_pipe(t_lexer *tkn_lst, t_table *table, t_mini *minish);
+//int		check_valid_pipe(t_lexer *tkn_lst, t_table *table, t_mini *minish);
 //bool 	exp_env_vars(char **content, t_mini *msh);
 // char	*check_string(char **content, t_mini *minish);
 // void	exp_env_vars(char **content, t_mini *minish);
 // char	*check_and_expand_env(char **content, int *i, t_mini *minish);
 
+
+
+
+bool handle_pipe(t_lexer **token, t_mini *minish, t_table **table);
+bool put_to_table_pipe(t_table **table, t_lexer **token, t_mini *minish);
+bool check_valid_pipe(t_lexer **token, t_table **table, t_mini *minish);
 // PARSING UTILS
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_getenv(t_mini *minish, char	*env);

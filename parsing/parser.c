@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/16 17:00:27 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/17 01:43:38 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,10 @@ bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table)
         exp_env_vars(&(*token)->data, minish);
 		
     }
+	if ((*token)->type == PIPE)
+	{
+		handle_pipe(token, minish, table);
+	}
 	add_token_to_table(table, *token);
 	return (true);
 }
@@ -163,22 +167,46 @@ int	check_valid_redir_input(t_lexer **token_lst, t_mini *minish)
 // 	return (0);
 // }
 
-int	check_valid_pipe(t_lexer *token_lst, t_table *table, t_mini *minish)
+bool put_to_table_pipe(t_table **table, t_lexer **token, t_mini *minish)
 {
-	if (token_lst->type == PIPE && !table)
-	{
-		write_err(minish, 11, token_lst->data);
-		return (-1);
-	}
-	else if (token_lst->type == PIPE && !token_lst->next)
-	{
-		write_err(minish, 10, NULL);
-		return (-1);
-	}
-	else if (token_lst->type == PIPE && token_lst->next->type != STRING)
-	{
-		write_err(minish, 12, token_lst->next->data);
-		return (-1);
-	}
-	return (0);
+	t_table *node;
+	t_table *current;
+
+	(void)token;
+	current = (*table);
+	while(current->next)
+		current = current->next;
+	node = malloc(sizeof(t_table));
+	if (!node)
+		return (write_err(minish, 6, NULL), false);
+	node->leftpipe = false;
+	node->rightpipe = true;
+	node->command = NULL;
+	node->next = NULL;
+	if (current)
+		current->next = node;
+	else
+		(*table) = node;
+	return (true);
+}
+
+
+bool check_valid_pipe(t_lexer **token, t_table **table, t_mini *minish)
+{
+	if((*token)->next == NULL)
+		return (write_err(minish, 10, NULL), false);
+	else if ((*token)->next->type != STRING)
+		return (write_err(minish, 11, (*token)->next->data), false);
+	else if ((*token)->type == PIPE && !(*table))
+		return (write_err(minish, 12, NULL), false);
+	return (true);
+}
+
+bool handle_pipe(t_lexer **token, t_mini *minish, t_table **table)
+{	
+	if (!check_valid_pipe(token, table, minish))
+		return (false);
+	if (!put_to_table_pipe(table, token, minish))
+		return (false);
+	return (true);
 }
