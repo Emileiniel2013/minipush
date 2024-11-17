@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:16:25 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/17 15:12:24 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/17 16:54:27 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,15 @@ void	add_token_to_table(t_table **table, t_lexer *token_lst)
 	if (token == STRING || token == DOUBLE_QUOTE || token == SINGLE_QUOTE)
 	{
 		if (!(*table))
-			allocate_table(table, false);
+			create_table(table, false);
 		current_node = *table;
 		while (current_node->next)
 			current_node = current_node->next;
-		add_cmd_node(&current_node, token_lst->data);
+		create_cmd_table(&current_node, token_lst->data);
 	}
 }
 
-void	allocate_table(t_table **table, bool leftpipe)
+void	create_table(t_table **table, bool leftpipe)
 {
 	*table = malloc(sizeof(t_table));
 	if (!(*table))
@@ -46,7 +46,7 @@ void	allocate_table(t_table **table, bool leftpipe)
 	(*table)->command = NULL;
 }
 
-void	add_cmd_node(t_table **table, char *content)
+void	create_cmd_table(t_table **table, char *content)
 {
 	t_cmd	*new_node;
 	t_cmd	*current_node;
