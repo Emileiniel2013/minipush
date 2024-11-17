@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:32:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/17 01:40:06 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/17 02:57:36 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ bool	heredoc_loop(char *delimiter, int fd);
 
 
 
-bool handle_pipe(t_lexer **token, t_mini *minish, t_table **table);
+bool handle_pipe(t_lexer *token, t_mini *minish, t_table *table);
 bool put_to_table_pipe(t_table **table, t_lexer **token, t_mini *minish);
-bool check_valid_pipe(t_lexer **token, t_table **table, t_mini *minish);
+bool check_valid_pipe(t_lexer *token, t_table *table, t_mini *minish);
 // PARSING UTILS
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_getenv(t_mini *minish, char	*env);
@@ -58,3 +58,25 @@ void	free_parser(t_mini *minish, t_lexer *lst, t_table *table);
 void	ft_free(char **content);
 
 #endif
+
+
+// int	handle_token(t_lexer **tkn_lst, t_mini *minish, t_table **table)
+// {
+// 	int		i;
+// 	t_token	token;
+
+// 	i = 0;
+// 	token = (*tkn_lst)->type;
+// 	if (token == REDIROUT || token == REDIROUTAPP || token == REDIRIN)
+// 		i = check_valid_redir_input(tkn_lst, minish);
+// 	else if (token == STRING || token == DOUBLE_QUOTE)
+// 		exp_env_vars(&(*tkn_lst)->data, minish);
+// 	else if (token == HEREDOC)
+// 		i = handle_heredoc(tkn_lst, minish);
+// 	else if (token == PIPE)
+// 		i = check_valid_pipe(*tkn_lst, *table, minish);
+// 	if (i == -1)
+// 		return (i);
+// 	add_token_to_table(table, *tkn_lst);
+// 	return (i);
+// }

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:16:25 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/14 16:19:08 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/17 02:09:27 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,15 @@ void	add_token_to_table(t_table **table, t_lexer *token_lst)
 			current_node = current_node->next;
 		add_cmd_node(&current_node, token_lst->data);
 	}
-	else if (token_lst->type == PIPE)
-	{
-		current_node = *table;
-		while (current_node->next)
-			current_node = current_node->next;
-		current_node->rightpipe = true;
-		allocate_table(&new_node, true);
-		current_node->next = new_node;
-	}
+	// else if (token_lst->type == PIPE)
+	// {
+	// 	current_node = *table;
+	// 	while (current_node->next)
+	// 		current_node = current_node->next;
+	// 	current_node->rightpipe = true;
+	// 	allocate_table(&new_node, true);
+	// 	current_node->next = new_node;
+	// }
 }
 
 void	allocate_table(t_table **table, bool leftpipe)

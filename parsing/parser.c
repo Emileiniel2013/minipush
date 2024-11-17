@@ -6,44 +6,20 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/17 01:43:38 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/17 03:02:25 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
 bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table);
 //** This function will call the lexer function and pass the tokens to the parser
-// void	minishell_parser(char *line, t_mini *minish)
-// {
-// 	t_lexer		*token;
-// 	t_table		*table;
-	
-// 	table = NULL;
-// 	token = lexer(line);
-// 	if (!token)
-// 		return ;
-// 	while (token)
-// 	{
-// 		if (!pass_token_to_table(&token, minish, &table))
-// 		{
-// 			free_parser(minish, token, table);
-// 			return ;
-// 		}
-// 		token = token->next;
-// 	}
-// 	free_tkn_lst(token);
-// 	minish->table = table;
-// 	minish->table_head = table;
-// }
 void	minishell_parser(char *prompt, t_mini *msh)
 {
-	t_lexer	*tkn_lst;
-	t_lexer	*lst_head;
+	t_lexer		*tkn_lst;
+	t_lexer		*lst_head;
 	t_table		*table;
-	//int			i;
 
 	table = NULL;
-	//i = 0;
 	tkn_lst = lexer(prompt);
 	lst_head = tkn_lst;
 	if (!tkn_lst)
@@ -56,7 +32,6 @@ void	minishell_parser(char *prompt, t_mini *msh)
 			free_parser(msh, lst_head, table);
 			return ;
 		}
-		//i++;
 		tkn_lst = tkn_lst->next;
 	}
 	msh->table = table;
@@ -65,49 +40,32 @@ void	minishell_parser(char *prompt, t_mini *msh)
 //======== pAss tO tAblE FuNctiOns =========
 //** This function will check the type of the token and call the appropriate
 bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table)
-{
-	bool	result;
+{	
+	bool res;
 
-	result = false;
-	
-
+	res = true;
     if ((*token)->data == NULL)
         return false;
 
     if ((*token)->type == STRING)
     {
-        exp_env_vars(&(*token)->data, minish);
-		
+        if(!exp_env_vars(&(*token)->data, minish))
+			return false;
+		add_token_to_table(table, *token);	
     }
 	if ((*token)->type == PIPE)
 	{
-		handle_pipe(token, minish, table);
+		res = handle_pipe(*token, minish, *table);
+		//add_token_to_table(table, *token);	
 	}
-	add_token_to_table(table, *token);
+	if (!res)
+	{
+		printf("Error putting to table this TOken %d\n", (*token)->type);
+		return false;
+	}
 	return (true);
 }
 
-
-// int	handle_token(t_lexer **tkn_lst, t_mini *minish, t_table **table)
-// {
-// 	int		i;
-// 	t_token	token;
-
-// 	i = 0;
-// 	token = (*tkn_lst)->type;
-// 	if (token == REDIROUT || token == REDIROUTAPP || token == REDIRIN)
-// 		i = check_valid_redir_input(tkn_lst, minish);
-// 	else if (token == STRING || token == DOUBLE_QUOTE)
-// 		exp_env_vars(&(*tkn_lst)->data, minish);
-// 	else if (token == HEREDOC)
-// 		i = handle_heredoc(tkn_lst, minish);
-// 	else if (token == PIPE)
-// 		i = check_valid_pipe(*tkn_lst, *table, minish);
-// 	if (i == -1)
-// 		return (i);
-// 	add_token_to_table(table, *tkn_lst);
-// 	return (i);
-// }
 
 int	check_valid_redir_input(t_lexer **token_lst, t_mini *minish)
 {
@@ -167,46 +125,69 @@ int	check_valid_redir_input(t_lexer **token_lst, t_mini *minish)
 // 	return (0);
 // }
 
-bool put_to_table_pipe(t_table **table, t_lexer **token, t_mini *minish)
+// bool put_to_table_pipe(t_table **table, t_lexer **token, t_mini *minish)
+// {
+// 	t_table *node;
+// 	t_table *current;
+
+// 	(void)token;
+// 	current = (*table);
+// 	while(current->next)
+// 		current = current->next;
+// 	node = malloc(sizeof(t_table));
+// 	if (!node)
+// 		return (write_err(minish, 6, NULL), false);
+// 	node->leftpipe = false;
+// 	node->rightpipe = true;
+// 	node->command = NULL;
+// 	node->next = NULL;
+// 	if (current)
+// 		current->next = node;
+// 	else
+// 		(*table) = node;
+// 	return (true);
+// }
+
+
+bool check_valid_pipe(t_lexer *token, t_table *table, t_mini *minish)
 {
-	t_table *node;
-	t_table *current;
-
-	(void)token;
-	current = (*table);
-	while(current->next)
-		current = current->next;
-	node = malloc(sizeof(t_table));
-	if (!node)
-		return (write_err(minish, 6, NULL), false);
-	node->leftpipe = false;
-	node->rightpipe = true;
-	node->command = NULL;
-	node->next = NULL;
-	if (current)
-		current->next = node;
-	else
-		(*table) = node;
-	return (true);
-}
-
-
-bool check_valid_pipe(t_lexer **token, t_table **table, t_mini *minish)
-{
-	if((*token)->next == NULL)
+	if(token->next == NULL)
 		return (write_err(minish, 10, NULL), false);
-	else if ((*token)->next->type != STRING)
-		return (write_err(minish, 11, (*token)->next->data), false);
-	else if ((*token)->type == PIPE && !(*table))
+	else if (token->next->type != STRING)
+		return (write_err(minish, 11, token->next->data), false);
+	else if (token->type == PIPE && !table)
 		return (write_err(minish, 12, NULL), false);
 	return (true);
 }
 
-bool handle_pipe(t_lexer **token, t_mini *minish, t_table **table)
+bool handle_pipe(t_lexer *token, t_mini *minish, t_table *table)
 {	
-	if (!check_valid_pipe(token, table, minish))
-		return (false);
-	if (!put_to_table_pipe(table, token, minish))
-		return (false);
+	t_table *node;
+	t_table *current;
+	
+	check_valid_pipe(token, table, minish);
+	current = table;
+	while(current && current->next)
+		current = current->next;
+	node = malloc(sizeof(t_table));
+	if (!node)
+		return (write_err(minish, 6, NULL), false);
+	node->leftpipe = true;
+	node->rightpipe = false;
+	node->command = NULL;
+	node->next = NULL;
+	if (current)
+	{
+		current->rightpipe = true;	
+		current->next = node;
+	}
+	else
+		table = node;
+	return (true);
+	// if (!put_to_table_pipe(table, token, minish))
+	// {
+	// 	printf("FAIL TABLE PIPE");	
+	// 	return (false);
+	// }
 	return (true);
 }
