@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/14 16:22:53 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/18 19:57:28 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,53 +46,40 @@ void	free_tkn_lst(t_lexer *token_lst)
 	}
 }
 
-void	print_token(t_lexer *tokens)
-{
-	char *str;
-	// printf("ERROR HERE\n");
-	while (tokens)
-	{
-		// printf("ERROR HERE1\n");
-		if (tokens->type == COMMAND)
-		{
-			// printf("ERROR HERE2\n");
-		str = "COMMAND";
-		}
-		else if (tokens->type == PIPE)
-		{
-			// printf("ERROR HERE3\n");
-			str = "PIPE";
-		}
-		else if (tokens->type == REDIROUT)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_OUT";
-		}
-		else if (tokens->type == REDIRIN)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_IN";
-		}
-		else if (tokens->type == HEREDOC)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_LESS_LESS";
-		}
-		else if (tokens->type == APPEND)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_GREAT_GREAT";
-		}
-		else
-		{
-			// printf("ERROR HERE5\n");
-			str = "UNKNOWN";
-		}
-		// printf("ERROR HERE666\n");
-		printf("Token : %s  Type: %s\n", tokens->data, str);
-		tokens = tokens->next;
-	}
-}
+// char	*handle_single_quote(char *prompt)
+// {
+// 	char	*end;
+// 	char	*string;
+
+// 	end = ft_strchr(prompt, 39);
+// 	string = malloc(ft_strlen(prompt));
+// 	if (!string)
+// 	{
+// 		printf("failed to allocate memory for the new string\n");
+// 		return (NULL);
+// 	}
+// 	if (prompt && end)
+// 	{
+// 		ft_memmove(string, prompt, end - prompt);
+// 		string[end - prompt] = '\0';
+// 	}
+// 	else
+// 		return (NULL);
+// 	return (string);
+// }
+	// else
+	// {
+	// 	(*i)++;
+	// 	quote_end = ft_strchr(&prompt[(*i)], 39);
+	// 	if(quote_end)
+	// 	{
+	// 		tmp = handle_single_quote(&prompt[(*i)]);
+	// 		(*current) = create_tok(tmp, SINGLE_QUOTE);
+	// 		add_token(head, (*current));
+	// 		free(tmp);
+	// 		(*i) = quote_end - prompt + 1;
+	// 	}
+	// }
 
 // void	set_quote_type(int *quote_type, char quote)
 // {

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/18 15:52:29 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/18 19:35:36 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ char *expand_var(t_mini *msh, const char *content, int *i)
 	var_name = ft_strndup(content + start, len);
 	env_value = ft_get_env_value(msh, var_name);
 	free(var_name);
-	i += len;
+	*i += len;
 	return (env_value);
 }
 char *ft_get_env_value(t_mini *msh, const char *var_name)
