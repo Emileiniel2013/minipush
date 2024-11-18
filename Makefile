@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+         #
+#    By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/02 11:51:28 by temil-da          #+#    #+#              #
-#    Updated: 2024/11/07 16:45:11 by temil-da         ###   ########.fr        #
+#    Updated: 2024/11/18 14:43:05 by tndreka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,6 @@ SRC = execution/executor.c execution/builtin_commands.c execution/helper_functio
 	lexing/lexer.c lexing/helper_functions.c lexing/lexer_utils.c lexing/print_error.c main.c
 OBJ = $(SRC:.c=.o)
 
-.PHONY: all clean fclean re
 
 all: $(NAME)
 
@@ -49,3 +48,4 @@ fclean:
 	rm -f $(NAME)
 	$(MAKE) -C $(LIBFT_DIR) fclean
 re: fclean all
+.PHONY: all clean fclean re

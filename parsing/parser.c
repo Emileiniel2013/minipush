@@ -6,13 +6,14 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/17 18:14:39 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:07:34 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
 bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table);
 bool	handle_redir(t_lexer **token, t_mini *minish, t_table **table);
+void add_redir_to_table(t_lexer **token, t_table **table);
 //** This function will call the lexer function and pass the tokens to the parser
 void	minishell_parser(char *prompt, t_mini *msh)
 {
@@ -63,38 +64,6 @@ bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table)
 
 //==============================================================================
 
-// int	check_valid_redir_input(t_lexer **token_lst, t_mini *minish)
-// {
-// 	int	fd;
-
-// 	fd = 0;
-// 	if ((*token_lst)->next == NULL)
-// 		return (write_err(minish, 8, NULL), -1);
-// 	else if ((*token_lst)->next->type != STRING)
-// 		return (write_err(minish, 9, (*token_lst)->next->data), -1);
-// 	if ((*token_lst)->type == REDIRIN)
-// 	{
-// 		if (minish->in_redir)
-// 			free(minish->in_redir);
-// 		minish->in_redir = ft_strdup((*token_lst)->next->data);
-// 	}
-// 	else if ((*token_lst)->type == REDIROUT || (*token_lst)->type == REDIROUTAPP)
-// 	{
-// 		if (minish->out_redir)
-// 		{
-// 			fd = open(minish->out_redir, O_CREAT, 0644);
-// 			if (fd < 0)
-// 				return (write_err(minish, 7, NULL), -1);
-// 			close(fd);
-// 			free(minish->out_redir);
-// 		}
-// 		minish->out_redir = ft_strdup((*token_lst)->next->data);
-// 	}
-// 	(*token_lst)->next->type = FILENAME;
-// 	if ((*token_lst)->type == REDIROUTAPP)
-// 		minish->append_mode = true;
-// 	return (0);
-// }
 // int	handle_heredoc(t_lexer **token_lst, t_mini *minish)
 // {
 // 	char	*delimiter;
@@ -165,35 +134,52 @@ bool handle_pipe(t_lexer *token, t_mini *minish, t_table *table)
 
 bool exp_env_vars(char **content, t_mini *msh)
 {
-	char *expanded_string;
-	char *prefix;
-	char *env_exit_code;
-	int i = 0;	
-	int j = 0;
-	// expanded_string = ft_strdup("");
-	while((*content)[i])
+	char		*exp_string;
+	while (1)
 	{
-		while ((*content)[i] && (*content)[i] != '$')
-			i++;
-		if (NULL == (*content)[i])
-			return false;
-		prefix = ft_strndup(*content, i);
-		expanded_string = ft_strjoin(expanded_string, prefix);
-		free(prefix);
-		
-		
+		exp_string = handle_content(content, msh);
+		if(ft_strcmp(*content, exp_string) == 0)
+		{
+			free(exp_string);
+			break;
+		}
+		free_and_assign(content, exp_string);
 	}
-	return (true);
+	return(true);
 }
+
+char *handle_content(char **content, t_mini *msh)
+{
+	char	*str;
+	int		i;
+	int		last_pos;
+	char *tmp;
+	
+	i = 0;
+	last_pos = 0;
+	str = ft_strdup("");
+	while ((*content)[i])
+	{
+		if ((*content)[i] == '$')
+			check_dollar(content, &i, &last_pos, str);
+		else
+			i++;
+	}
+	if(last_pos < i)
+	{
+		tmp = ft_strdup((*content) + last_pos);
+		free_and_assign(&str, ft_strjoin(str, tmp));
+		free(tmp);
+	}
+	return (str);
+}
+
 //===================================================================================
 
 //========================== REDIRECTIONS ===========================================
 bool handle_redir(t_lexer **token, t_mini *minish, t_table **table)
 {
-	t_table	*new_node;
-	t_table	*current_node;
-	new_node = NULL;
-	current_node = NULL;
+	
 	if ((*token)->next == NULL)
 		return (write_err(minish, 8, NULL), false);
 	else if ((*token)->next->type != STRING)
@@ -213,6 +199,17 @@ bool handle_redir(t_lexer **token, t_mini *minish, t_table **table)
 	(*token)->next->type = FILENAME;
 	if ((*token)->type == REDIROUTAPP)
 		minish->append_mode = true;
+	add_redir_to_table(token, table);
+	return (true);
+}
+
+void add_redir_to_table(t_lexer **token, t_table **table)
+{
+	t_table	*new_node;
+	t_table	*current_node;
+	
+	new_node = NULL;
+	current_node = NULL;
 	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE || (*token)->type == SINGLE_QUOTE)
 	{
 		if (!(*table))
@@ -222,7 +219,6 @@ bool handle_redir(t_lexer **token, t_mini *minish, t_table **table)
 			current_node = current_node->next;
 		create_cmd_table(&current_node, (*token)->data);
 	}
-	return (true);
 }
 // ==================================================================================
 

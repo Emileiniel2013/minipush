@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:32:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/17 17:09:29 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:09:14 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@
 # include <stdbool.h>
 # include <fcntl.h>
 
+typedef struct s_dollar_param
+{
+	char **content;
+	int *i;
+	int *last_pos;
+	char **str;
+	t_msh *msh;
+}	t_dollar_param;
 // MAIN PARSING FUNCTIONS
 void	minishell_parser(char *prompt, t_mini *msh);
 bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table);

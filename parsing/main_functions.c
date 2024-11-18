@@ -6,89 +6,89 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/17 17:09:51 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:10:39 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
 
 
-// bool exp_env_vars(char **content, t_mini *msh)
-// {
-// 	char *expanded_string;
-// 	char *prefix;
-// 	//char *env_exit_code;
-// 	int i = 0;	
+bool exp_env_vars(char **content, t_mini *msh)
+{
+	char *expanded_string;	
+	int i = 0;
+	int last_pos = 0;
+	char *tmp;
+	t_dollar_param params;
 
-// 	(void)msh;
-// 	expanded_string = ft_strdup("");
-// 	while((*content)[i])
-// 	{
-// 		while ((*content)[i] && (*content)[i] != '$')
-// 		{
-// 			i++;
-// 		}
-// 		prefix = ft_strndup(*content, i);
-// 		expanded_string = ft_strjoin(expanded_string, prefix);
-// 		free(prefix);
+	expanded_string = ft_strdup("");
+	while((*content)[i])
+	{
+		while ((*content)[i] && (*content)[i] != '$')
+		{
+			i++;
+		}
+		prefix = ft_strndup(*content, i);
+		expanded_string = ft_strjoin(expanded_string, prefix);
+		free(prefix);
 			
+	}
+	return (true);
+}
+//=============================================================================
+// char	*check_and_expand_env(char **content, int *i, t_mini *minish)
+// {
+// 	int		j;
+// 	char	*temp;
+// 	char	*temp2;
+
+// 	j = 0;
+// 	temp = NULL;
+// 	while ((*content)[*i])
+// 	{
+// 		if (ft_isalnum((*content)[*i]) == 1 || (*content)[*i] == '_')
+// 		{
+// 			(*i)++;
+// 			j++;
+// 		}
+// 		else
+// 			break ;
 // 	}
-// 	return (true);
+// 	temp2 = ft_strndup((*content) + ((*i) - j), j);
+// 	temp = ft_getenv(minish, temp2);
+// 	free(temp2);
+// 	temp2 = NULL;
+// 	return (temp);
 // }
 
-char	*check_and_expand_env(char **content, int *i, t_mini *minish)
-{
-	int		j;
-	char	*temp;
-	char	*temp2;
+// char	*check_string(char **content, t_mini *minish)
+// {
+// 	int		i;
+// 	char	*expanded_string;
+// 	char	*env;
 
-	j = 0;
-	temp = NULL;
-	while ((*content)[*i])
-	{
-		if (ft_isalnum((*content)[*i]) == 1 || (*content)[*i] == '_')
-		{
-			(*i)++;
-			j++;
-		}
-		else
-			break ;
-	}
-	temp2 = ft_strndup((*content) + ((*i) - j), j);
-	temp = ft_getenv(minish, temp2);
-	free(temp2);
-	temp2 = NULL;
-	return (temp);
-}
-
-char	*check_string(char **content, t_mini *minish)
-{
-	int		i;
-	char	*expanded_string;
-	char	*env;
-
-	i = 0;
-	env = NULL;
-	expanded_string = NULL;
-	while ((*content)[i] && (*content)[i] != '$')
-		i++;
-	if (!(*content)[i])
-		return (NULL);
-	expanded_string = ft_strndup(*content, i);
-	i++;
-	if ((*content)[i] == '?')
-	{
-		env = ft_itoa(minish->exit_code);
-		i++;
-	}
-	else
-		env = check_and_expand_env(content, &i, minish);
-	if (env)
-		replace_varname_wtih_var(&expanded_string, &env);
-	if ((*content)[i])
-		append_remainder(&expanded_string, content, i);
-	return (expanded_string);
-}
+// 	i = 0;
+// 	env = NULL;
+// 	expanded_string = NULL;
+// 	while ((*content)[i] && (*content)[i] != '$')
+// 		i++;
+// 	if (!(*content)[i])
+// 		return (NULL);
+// 	expanded_string = ft_strndup(*content, i);
+// 	i++;
+// 	if ((*content)[i] == '?')
+// 	{
+// 		env = ft_itoa(minish->exit_code);
+// 		i++;
+// 	}
+// 	else
+// 		env = check_and_expand_env(content, &i, minish);
+// 	if (env)
+// 		replace_varname_wtih_var(&expanded_string, &env);
+// 	if ((*content)[i])
+// 		append_remainder(&expanded_string, content, i);
+// 	return (expanded_string);
+// }
 
 // void	exp_env_vars(char **content, t_mini *minish)
 // {
@@ -128,3 +128,4 @@ bool	heredoc_loop(char *delimiter, int fd)
 	line = NULL;
 	return (true);
 }
+//==========================================================================================
