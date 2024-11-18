@@ -6,35 +6,35 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/18 15:12:32 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:43:26 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
 
 
-bool exp_env_vars(char **content, t_mini *msh)
-{
-	char *expanded_string;
-	char *prefix;
-	//char *env_exit_code;
-	int i = 0;	
+// bool exp_env_vars(char **content, t_mini *msh)
+// {
+// 	char *expanded_string;
+// 	char *prefix;
+// 	//char *env_exit_code;
+// 	int i = 0;	
 
-	(void)msh;
-	expanded_string = ft_strdup("");
-	while((*content)[i])
-	{
-		while ((*content)[i] && (*content)[i] != '$')
-		{
-			i++;
-		}
-		prefix = ft_strndup(*content, i);
-		expanded_string = ft_strjoin(expanded_string, prefix);
-		free(prefix);
+// 	(void)msh;
+// 	expanded_string = ft_strdup("");
+// 	while((*content)[i])
+// 	{
+// 		while ((*content)[i] && (*content)[i] != '$')
+// 		{
+// 			i++;
+// 		}
+// 		prefix = ft_strndup(*content, i);
+// 		expanded_string = ft_strjoin(expanded_string, prefix);
+// 		free(prefix);
 			
-	}
-	return (true);
-}
+// 	}
+// 	return (true);
+// }
 //=============================================================================
 // char	*check_and_expand_env(char **content, int *i, t_mini *minish)
 // {

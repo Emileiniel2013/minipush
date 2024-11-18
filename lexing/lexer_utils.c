@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:45:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/14 16:26:47 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:55:09 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	add_token(t_lexer **tokens, t_lexer *new_token)
 		temp->next = new_token;
 	}
 }
-char	*ft_strndup(char *s1, size_t len)
+char	*ft_strndup(const char *s1, size_t len)
 {
 	size_t	j;
 	char	*cpy;
