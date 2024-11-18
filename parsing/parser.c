@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/18 15:07:34 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:17:47 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,15 +153,21 @@ char *handle_content(char **content, t_mini *msh)
 	char	*str;
 	int		i;
 	int		last_pos;
-	char *tmp;
+	char 	*tmp;
+	t_dollar_param param;
 	
 	i = 0;
 	last_pos = 0;
 	str = ft_strdup("");
+	param.content = content;
+	param.content = &i;
+	param.last_pos = &last_pos;
+	param.str = &str;
+	param.msh = msh;
 	while ((*content)[i])
 	{
 		if ((*content)[i] == '$')
-			check_dollar(content, &i, &last_pos, str);
+			check_dollar(&param);
 		else
 			i++;
 	}

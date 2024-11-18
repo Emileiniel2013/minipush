@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/18 15:10:39 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:12:32 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 bool exp_env_vars(char **content, t_mini *msh)
 {
-	char *expanded_string;	
-	int i = 0;
-	int last_pos = 0;
-	char *tmp;
-	t_dollar_param params;
+	char *expanded_string;
+	char *prefix;
+	//char *env_exit_code;
+	int i = 0;	
 
+	(void)msh;
 	expanded_string = ft_strdup("");
 	while((*content)[i])
 	{
