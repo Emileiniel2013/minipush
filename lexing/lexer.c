@@ -6,13 +6,11 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/19 14:11:49 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/19 14:20:54 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lexer.h"
-
-void	single_qoute(char *prompt, t_lexer **head, t_lexer **current, int *i); 
 
 t_lexer	*lexer(char *prompt)
 {
@@ -33,12 +31,12 @@ t_lexer	*lexer(char *prompt)
 			add_token(&head, current);
 			i++;
 		}
-		else if (prompt[i] == '\"' )
+		else if (prompt[i] == '\"')
 		{
 			i++;
 			double_qoute(prompt, &head, &current, &i);
 		}
-		else if (prompt[i] == '\'' )
+		else if (prompt[i] == '\'')
 		{
 			i++;
 			single_qoute(prompt, &head, &current, &i);
@@ -82,51 +80,18 @@ void	double_qoute(char *prompt, t_lexer **head, t_lexer **current, int *i)
 	char	*quote_end;
 	char	*tmp;
 
-		quote_end = ft_strchr((&prompt[(*i)]), '\"');
-		if (quote_end)
-		{
-			tmp = handle_quote(&prompt[(*i)]);
-			(*current) = create_tok(tmp, DOUBLE_QUOTE);
-			add_token(head, (*current));
-			free(tmp);
-			(*i) = quote_end - prompt + 1;
-		}
-		else
-			printf("Error\n");
+	quote_end = ft_strchr((&prompt[(*i)]), '\"');
+	if (quote_end)
+	{
+		tmp = handle_quote(&prompt[(*i)]);
+		(*current) = create_tok(tmp, DOUBLE_QUOTE);
+		add_token(head, (*current));
+		free(tmp);
+		(*i) = quote_end - prompt + 1;
+	}
+	else
+		printf("Error\n");
 }
-void	single_qoute(char *prompt, t_lexer **head, t_lexer **current, int *i)
-{
-	char	*quote_end;
-	char	*tmp;
-
-		quote_end = ft_strchr((&prompt[(*i)]), '\'');
-		if (quote_end)
-		{
-			tmp = handle_single_quote(&prompt[(*i)]);
-			(*current) = create_tok(tmp, SINGLE_QUOTE);
-			add_token(head, (*current));
-			free(tmp);
-			(*i) = quote_end - prompt + 1;
-		}
-		else
-			printf("Error\n");
-}
-// 	else
-// 	{
-
-// 		quote_end = ft_strchr(&prompt[(*i)], '\'');
-// 		if (quote_end)
-// 		{
-// 			tmp = handle_single_quote(&prompt[(*i)]);
-// 			(*current) = create_tok(tmp, DOUBLE_QUOTE);
-// 			add_token(head, (*current));
-// 			free(tmp);
-// 			(*i) = quote_end - prompt + 1;
-// 		}
-// 		else 
-// 		 printf("ERROR\n");
-// 		}
-// }
 
 void	redirection_less(const char *prompt, t_lexer **head, t_lexer **current,
 		int *i)
@@ -161,4 +126,3 @@ void	redirection(const char *prompt, t_lexer *current, t_lexer **head,
 		(*i)++;
 	}
 }
-

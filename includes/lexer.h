@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:27:42 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/19 12:06:29 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/19 14:20:01 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,12 @@ typedef struct t_minishell
 t_lexer		*lexer(char *prompt);
 void		create_comand_token(char *prompt, t_lexer **head, t_lexer **current,
 				int *i);
-void		double_qoute(char *prompt, t_lexer **head, t_lexer **current, int *i);
-
-void		redirection_less(const char *prompt, t_lexer **head, t_lexer **current,
+void		double_qoute(char *prompt, t_lexer **head, t_lexer **current,
 				int *i);
+void		single_qoute(char *prompt, t_lexer **head, t_lexer **current,
+				int *i);
+void		redirection_less(const char *prompt, t_lexer **head,
+				t_lexer **current, int *i);
 void		redirection(const char *prompt, t_lexer *current, t_lexer **head,
 				int *i);
 // // HELPER FUNCTIONS
@@ -104,11 +106,10 @@ void		add_token(t_lexer **tokens, t_lexer *new_token);
 t_lexer		*create_tok(char *data, t_token type);
 char		*handle_quote(char *prompt);
 char		*handle_single_quote(char *prompt);
+
 // ERROR HANDLING
 void		write_err(t_mini *minish, int code, char *arg);
 void		write_simple_err(int code);
 void		write_arg_err(int code, char *arg);
-
-char	*handle_single_quote(char *prompt);
 
 #endif

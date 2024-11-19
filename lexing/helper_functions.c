@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/18 19:57:28 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/19 14:21:21 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,65 +46,58 @@ void	free_tkn_lst(t_lexer *token_lst)
 	}
 }
 
-// char	*handle_single_quote(char *prompt)
-// {
-// 	char	*end;
-// 	char	*string;
+char	*ft_strndup(const char *s1, size_t len)
+{
+	size_t	j;
+	char	*cpy;
 
-// 	end = ft_strchr(prompt, 39);
-// 	string = malloc(ft_strlen(prompt));
-// 	if (!string)
-// 	{
-// 		printf("failed to allocate memory for the new string\n");
-// 		return (NULL);
-// 	}
-// 	if (prompt && end)
-// 	{
-// 		ft_memmove(string, prompt, end - prompt);
-// 		string[end - prompt] = '\0';
-// 	}
-// 	else
-// 		return (NULL);
-// 	return (string);
-// }
-	// else
-	// {
-	// 	(*i)++;
-	// 	quote_end = ft_strchr(&prompt[(*i)], 39);
-	// 	if(quote_end)
-	// 	{
-	// 		tmp = handle_single_quote(&prompt[(*i)]);
-	// 		(*current) = create_tok(tmp, SINGLE_QUOTE);
-	// 		add_token(head, (*current));
-	// 		free(tmp);
-	// 		(*i) = quote_end - prompt + 1;
-	// 	}
-	// }
+	j = 0;
+	cpy = malloc(sizeof(char) * (len + 1));
+	if (!cpy)
+		return (NULL);
+	while (s1[j] && j < len)
+	{
+		cpy[j] = s1[j];
+		j++;
+	}
+	cpy[j] = '\0';
+	return (cpy);
+}
 
-// void	set_quote_type(int *quote_type, char quote)
-// {
-// 	if (quote == '"')
-// 		*quote_type = 2;
-// 	else if (quote == '\'')
-// 		*quote_type = 1;
-// }
+char	*ft_strncpy(char *dst, const char *src, size_t n)
+{
+	size_t	i;
 
-// t_tkn	identify_token(char *token, int quote_type)
-// {
-// 	if (quote_type == 1)
-// 		return (SINGLE_QUOTE);
-// 	else if (quote_type == 2)
-// 		return (DOUBLE_QUOTE);
-// 	else if (ft_strncmp(token, "|", ft_strlen(token)) == 0)
-// 		return (PIPE);
-// 	else if (ft_strncmp(token, "<", ft_strlen(token)) == 0)
-// 		return (REDIRIN);
-// 	else if (ft_strncmp(token, ">", ft_strlen(token)) == 0)
-// 		return (REDIROUT);
-// 	else if (ft_strncmp(token, ">>", ft_strlen(token)) == 0)
-// 		return (REDIROUTAPP);
-// 	else if (ft_strncmp(token, "<<", ft_strlen(token)) == 0)
-// 		return (HEREDOC);
-// 	else
-// 		return (STRING);
-// }
+	i = 0;
+	if (dst == NULL || src == NULL || n == 0)
+		return (dst);
+	while (i < n && src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	while (i < n)
+	{
+		dst[i] = '\0';
+		i++;
+	}
+	return (dst);
+}
+
+void	single_qoute(char *prompt, t_lexer **head, t_lexer **current, int *i)
+{
+	char	*quote_end;
+	char	*tmp;
+
+	quote_end = ft_strchr((&prompt[(*i)]), '\'');
+	if (quote_end)
+	{
+		tmp = handle_single_quote(&prompt[(*i)]);
+		(*current) = create_tok(tmp, SINGLE_QUOTE);
+		add_token(head, (*current));
+		free(tmp);
+		(*i) = quote_end - prompt + 1;
+	}
+	else
+		printf("Error\n");
+}

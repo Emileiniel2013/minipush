@@ -6,25 +6,27 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/18 19:35:36 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/19 14:31:32 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
+
 bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table);
 bool	handle_redir(t_lexer **token, t_mini *minish, t_table **table);
-void 	add_redir_to_table(t_lexer **token, t_table **table);
+void	add_redir_to_table(t_lexer **token, t_table **table);
 void	check_dollar(t_dollar_param *param);
 void	free_and_assign(char **dst, char *src);
-char 	*handle_content(char **content, t_mini *msh);
+char	*handle_content(char **content, t_mini *msh);
 char	*expand_var(t_mini *msh, const char *content, int *i);
 char	*ft_get_env_value(t_mini *msh, const char *var_name);
-//** This function will call the lexer function and pass the tokens to the parser
+
+//** This function will call the lexer function and pass the tokens in table
 void	minishell_parser(char *prompt, t_mini *msh)
 {
-	t_lexer		*tkn_lst;
-	t_lexer		*lst_head;
-	t_table		*table;
+	t_lexer	*tkn_lst;
+	t_lexer	*lst_head;
+	t_table	*table;
 
 	table = NULL;
 	tkn_lst = lexer(prompt);
@@ -46,24 +48,27 @@ void	minishell_parser(char *prompt, t_mini *msh)
 }
 //======== pAss tO tAblE FuNctiOns =========
 //** This function will check the type of the token and call the appropriate
+
 bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table)
-{	
-	bool res;
+{
+	bool	res;
 
 	res = true;
-    if ((*token)->data == NULL)
-        return false;
-    if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE || (*token)->type == SINGLE_QUOTE)
-    {
-        res = exp_env_vars(&(*token)->data, minish);
-		add_token_to_table(table, *token);	
-    }
+	if ((*token)->data == NULL)
+		return (false);
+	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE
+		|| (*token)->type == SINGLE_QUOTE)
+	{
+		res = exp_env_vars(&(*token)->data, minish);
+		add_token_to_table(table, *token);
+	}
 	else if ((*token)->type == PIPE)
 		res = handle_pipe(*token, minish, *table);
-	else if ((*token)->type == REDIRIN || (*token)->type == REDIROUT || (*token)->type == REDIROUTAPP)
-    {
-        res = handle_redir(token, minish, table);
-    }
+	else if ((*token)->type == REDIRIN || (*token)->type == REDIROUT
+		|| (*token)->type == REDIROUTAPP)
+	{
+		res = handle_redir(token, minish, table);
+	}
 	return (true);
 }
 
@@ -95,11 +100,10 @@ bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table)
 // }
 //============================================================================
 
-
 //================== PIPE =================================================
-bool check_valid_pipe(t_lexer *token, t_table *table, t_mini *minish)
+bool	check_valid_pipe(t_lexer *token, t_table *table, t_mini *minish)
 {
-	if(token->next == NULL)
+	if (token->next == NULL)
 		return (write_err(minish, 10, NULL), false);
 	else if (token->next->type != STRING)
 		return (write_err(minish, 11, token->next->data), false);
@@ -108,14 +112,14 @@ bool check_valid_pipe(t_lexer *token, t_table *table, t_mini *minish)
 	return (true);
 }
 
-bool handle_pipe(t_lexer *token, t_mini *minish, t_table *table)
-{	
-	t_table *node;
-	t_table *current;
-	
+bool	handle_pipe(t_lexer *token, t_mini *minish, t_table *table)
+{
+	t_table	*node;
+	t_table	*current;
+
 	check_valid_pipe(token, table, minish);
 	current = table;
-	while(current && current->next)
+	while (current && current->next)
 		current = current->next;
 	node = malloc(sizeof(t_table));
 	if (!node)
@@ -126,125 +130,21 @@ bool handle_pipe(t_lexer *token, t_mini *minish, t_table *table)
 	node->next = NULL;
 	if (current)
 	{
-		current->rightpipe = true;	
+		current->rightpipe = true;
 		current->next = node;
 	}
 	else
 		table = node;
 	return (true);
 }
-//===================================================================================
+//==================================================================
 
-//=============================== COMMANF & ENV_VAR =================================
+//=============================== COMMANF & ENV_VAR ================
+//====================================================================
 
-bool exp_env_vars(char **content, t_mini *msh)
+//========================== REDIRECTIONS =============================
+bool	handle_redir(t_lexer **token, t_mini *minish, t_table **table)
 {
-	char		*exp_string;
-	while (1)
-	{
-		exp_string = handle_content(content, msh);
-		if(ft_strcmp(*content, exp_string) == 0)
-		{
-			free(exp_string);
-			break;
-		}
-		free_and_assign(content, exp_string);
-	}
-	return(true);
-}
-
-char *handle_content(char **content, t_mini *msh)
-{
-	char	*str;
-	int		i;
-	int		last_pos;
-	char 	*tmp;
-	t_dollar_param param;
-	
-	i = 0;
-	last_pos = 0;
-	str = ft_strdup("");
-	param.content = content;
-	param.i = &i;
-	param.last_pos = &last_pos;
-	param.str = &str;
-	param.msh = msh;
-	while ((*content)[i])
-	{
-		if ((*content)[i] == '$')
-			check_dollar(&param);
-		else
-			i++;
-	}
-	if(last_pos < i)
-	{
-		tmp = ft_strdup((*content) + last_pos);
-		free_and_assign(&str, ft_strjoin(str, tmp));
-		free(tmp);
-	}
-	return (str);
-}
-void	check_dollar(t_dollar_param *param)
-{
-	char *temp;
-	char *env;
-	
-	temp = ft_strndup((*(param->content) + *(param->last_pos)), (*(param->i) - *(param->last_pos)));
-	free_and_assign(param->str, ft_strjoin(*(param->str), temp));
-	free(temp);
-	(*(param->i))++;
-	if((*(param->content))[*(param->i)] == '?')
-	{
-		env = ft_itoa(param->msh->exit_code);		
-		(*(param->i))++;
-	}
-	else
-		env = expand_var(param->msh, *(param->content), param->i);
-	if (env)
-	{
-		free_and_assign(param->str, ft_strjoin(*(param->str), env));
-		free(env);
-	}
-	*(param->last_pos) = *(param->i);
-}
-
-void free_and_assign(char **dst, char *src)
-{
-	free(*dst);
-	*dst = src;
-}
-
-char *expand_var(t_mini *msh, const char *content, int *i)
-{
-	int		start;
-	int		len;
-	char	*var_name;
-	char 	*env_value;
-
-	start = *i;
-	len = 0;
-	while (ft_isalnum(content[*i + len]) || content[*i + len] == '_')
-		len++;
-	var_name = ft_strndup(content + start, len);
-	env_value = ft_get_env_value(msh, var_name);
-	free(var_name);
-	*i += len;
-	return (env_value);
-}
-char *ft_get_env_value(t_mini *msh, const char *var_name)
-{
-	if(ft_strcmp(var_name, "?") == 0)
-		return (ft_itoa(msh->exit_code));
-	else
-		return (ft_getenv(msh, var_name));
-}
-
-//===================================================================================
-
-//========================== REDIRECTIONS ===========================================
-bool handle_redir(t_lexer **token, t_mini *minish, t_table **table)
-{
-	
 	if ((*token)->next == NULL)
 		return (write_err(minish, 8, NULL), false);
 	else if ((*token)->next->type != STRING)
@@ -268,14 +168,15 @@ bool handle_redir(t_lexer **token, t_mini *minish, t_table **table)
 	return (true);
 }
 
-void add_redir_to_table(t_lexer **token, t_table **table)
+void	add_redir_to_table(t_lexer **token, t_table **table)
 {
 	t_table	*new_node;
 	t_table	*current_node;
-	
+
 	new_node = NULL;
 	current_node = NULL;
-	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE || (*token)->type == SINGLE_QUOTE)
+	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE
+		|| (*token)->type == SINGLE_QUOTE)
 	{
 		if (!(*table))
 			create_table(table, false);
@@ -285,6 +186,6 @@ void add_redir_to_table(t_lexer **token, t_table **table)
 		create_cmd_table(&current_node, (*token)->data);
 	}
 }
-// ==================================================================================
+// =====================================================================
 
-//======================== HEREDOC ==================================================
+//======================== HEREDOC =====================================
