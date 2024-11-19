@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:45:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/18 19:59:34 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/19 14:08:58 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,29 @@ char	*handle_quote(char *prompt)
 	char	*string;
 
 	end = ft_strchr(prompt, 34);
-	string = malloc(ft_strlen(prompt));
+	string = malloc(ft_strlen(prompt - 1));
+	if (!string)
+	{
+		perror("failed to allocate memory for the new string\n");
+		return (NULL);
+	}
+	if (prompt && end)
+	{
+		//ft_strlcpy(string, prompt, ft_strlen(prompt) - 2);
+		ft_memmove(string, prompt, end - prompt);
+		string[end - prompt] = '\0';
+	}
+	else
+		return (NULL);
+	return (string);
+}
+char	*handle_single_quote(char *prompt)
+{
+	char	*end;
+	char	*string;
+
+	end = ft_strchr(prompt, '\'');
+	string = malloc(ft_strlen(prompt - 1));
 	if (!string)
 	{
 		perror("failed to allocate memory for the new string\n");

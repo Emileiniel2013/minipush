@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:27:42 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/18 19:46:40 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/19 12:06:29 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,7 @@ char		*handle_single_quote(char *prompt);
 void		write_err(t_mini *minish, int code, char *arg);
 void		write_simple_err(int code);
 void		write_arg_err(int code, char *arg);
+
+char	*handle_single_quote(char *prompt);
 
 #endif
