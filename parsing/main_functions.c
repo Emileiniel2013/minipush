@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:32:15 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 16:38:14 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,23 @@ char	*handle_content(char **content, t_mini *msh)
 		else
 			i++;
 	}
-	if (last_pos < i)
-	{
-		tmp = ft_strdup((*content) + last_pos);
-		free_and_assign(&str, ft_strjoin(str, tmp));
-		free(tmp);
-	}
+	handle_remaining_content(content, &str, last_pos, i);
 	return (str);
 }
 
-//void	handle_remaining_content(content, &str, last_pos, i);
+void	handle_remaining_content(char *content, char **str, int last_pos,
+	int i)
+{
+	char	*temp;
+
+	temp = NULL;
+	if (last_pos < i)
+	{
+		temp = ft_strdup((*content) + last_pos);
+		free_and_assign(str, ft_strjoin(*str, temp));
+		free(temp);
+	}
+}
 
 void	check_dollar(t_dollar_param *param)
 {
@@ -86,12 +93,6 @@ void	check_dollar(t_dollar_param *param)
 		free(env);
 	}
 	*(param->last_pos) = *(param->i);
-}
-
-void	free_and_assign(char **dst, char *src)
-{
-	free(*dst);
-	*dst = src;
 }
 
 char	*expand_var(t_mini *msh, const char *content, int *i)

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:16:25 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/17 16:54:27 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 16:39:15 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,24 @@ void	create_cmd_table(t_table **table, char *content)
 		while (current_node->next != NULL)
 			current_node = current_node->next;
 		current_node->next = new_node;
+	}
+}
+
+void	add_redir_to_table(t_lexer **token, t_table **table)
+{
+	t_table	*new_node;
+	t_table	*current_node;
+
+	new_node = NULL;
+	current_node = NULL;
+	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE
+		|| (*token)->type == SINGLE_QUOTE)
+	{
+		if (!(*table))
+			create_table(table, false);
+		current_node = *table;
+		while (current_node->next)
+			current_node = current_node->next;
+		create_cmd_table(&current_node, (*token)->data);
 	}
 }

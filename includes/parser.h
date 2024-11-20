@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:32:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:14:18 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 16:37:35 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ bool	exp_env_vars(char **content, t_mini *msh);
 char	*handle_content(char **content, t_mini *msh);
 void	check_dollar(t_dollar_param *param);
 void	free_and_assign(char **dst, char *src);
+void	handle_remaining_content(char *content, char **str, int last_pos,
+			int i);
 char	*expand_var(t_mini *msh, const char *content, int *i);
 char	*ft_get_env_value(t_mini *msh, const char *var_name);
 bool	check_valid_pipe(t_lexer *token, t_table *table, t_mini *minish);

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:14:33 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/19 14:24:29 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 16:38:23 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,10 @@ void	ft_free(char **content)
 		free(*content);
 		*content = NULL;
 	}
+}
+
+void	free_and_assign(char **dst, char *src)
+{
+	free(*dst);
+	*dst = src;
 }
