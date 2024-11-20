@@ -6,11 +6,28 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:45:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/19 14:20:32 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 16:28:32 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lexer.h"
+
+void	redirection(const char *prompt, t_lexer *current, t_lexer **head,
+		int *i)
+{
+	if (prompt[(*i) + 1] == '>')
+	{
+		current = create_tok(">>", APPEND);
+		add_token(head, current);
+		(*i) += 2;
+	}
+	else
+	{
+		current = create_tok(">", REDIROUT);
+		add_token(head, current);
+		(*i)++;
+	}
+}
 
 t_lexer	*create_tok(char *data, t_token type)
 {

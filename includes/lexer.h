@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:27:42 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/19 14:20:01 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 16:29:25 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,9 @@ typedef struct t_minishell
 
 // // MAIN FUNCTIONS
 t_lexer		*lexer(char *prompt);
+
+void		handle_token(char *prompt, t_lexer **head, t_lexer **current,
+				int *i);
 void		create_comand_token(char *prompt, t_lexer **head, t_lexer **current,
 				int *i);
 void		double_qoute(char *prompt, t_lexer **head, t_lexer **current,

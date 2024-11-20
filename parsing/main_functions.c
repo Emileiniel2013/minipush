@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/19 14:32:10 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 16:32:15 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ char	*handle_content(char **content, t_mini *msh)
 	return (str);
 }
 
+//void	handle_remaining_content(content, &str, last_pos, i);
+
 void	check_dollar(t_dollar_param *param)
 {
 	char	*temp;
@@ -109,22 +111,3 @@ char	*expand_var(t_mini *msh, const char *content, int *i)
 	*i += len;
 	return (env_value);
 }
-
-// bool	heredoc_loop(char *delimiter, int fd)
-// {
-// 	char	*line;
-
-// 	line = NULL;
-// 	line = readline("heredoc> ");
-// 	if (ft_strcmp(line, delimiter) == 0)
-// 	{
-// 		free(line);
-// 		line = NULL;
-// 		return (false);
-// 	}
-// 	write(fd, line, strlen(line));
-// 	write(fd, "\n", 1);
-// 	free(line);
-// 	line = NULL;
-// 	return (true);
-// }

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:32:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:05:30 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 16:14:18 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ bool	handle_pipe(t_lexer *token, t_mini *minish, t_table *table);
 bool	handle_redir(t_lexer **token, t_mini *minish, t_table **table);
 void	add_redir_to_table(t_lexer **token, t_table **table);
 bool	handle_heredoc(t_lexer **token, t_mini *msh, t_table **table);
-void	write_line (int fd, char *line);
+void	write_line(int fd, char *line);
 bool	check_valid_heredoc(t_lexer **token, t_mini *msh, char **separator);
 bool	open_the_fd(int *fd, t_mini *msh, char *separator);
 
