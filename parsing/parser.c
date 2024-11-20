@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/19 14:31:32 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 15:28:26 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@ char	*handle_content(char **content, t_mini *msh);
 char	*expand_var(t_mini *msh, const char *content, int *i);
 char	*ft_get_env_value(t_mini *msh, const char *var_name);
 
+bool	handle_heredoc(t_lexer **token, t_mini *msh, t_table **table);
+void	write_line (int fd, char *line);
+bool	check_valid_heredoc(t_lexer **token, t_mini *msh, char **separator);
+bool open_the_fd(int *fd, t_mini *msh, char *separator);
 //** This function will call the lexer function and pass the tokens in table
 void	minishell_parser(char *prompt, t_mini *msh)
 {
@@ -68,6 +72,11 @@ bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table)
 		|| (*token)->type == REDIROUTAPP)
 	{
 		res = handle_redir(token, minish, table);
+	}
+	else if ((*token)->type == HEREDOC)
+	{
+		res = handle_heredoc(token, minish, table);
+		add_token_to_table(table, *token);
 	}
 	return (true);
 }
@@ -137,12 +146,7 @@ bool	handle_pipe(t_lexer *token, t_mini *minish, t_table *table)
 		table = node;
 	return (true);
 }
-//==================================================================
 
-//=============================== COMMANF & ENV_VAR ================
-//====================================================================
-
-//========================== REDIRECTIONS =============================
 bool	handle_redir(t_lexer **token, t_mini *minish, t_table **table)
 {
 	if ((*token)->next == NULL)
@@ -188,4 +192,65 @@ void	add_redir_to_table(t_lexer **token, t_table **table)
 }
 // =====================================================================
 
-//======================== HEREDOC =====================================
+//======================== HEREDOC ====================================
+bool	handle_heredoc(t_lexer **token, t_mini *msh, t_table **table)
+{
+	char	*separator;
+	char	*line;
+	int		fd;
+
+	line = NULL;
+	fd = -1;
+	(void)table;
+	check_valid_heredoc(token, msh, &separator);
+	open_the_fd(&fd, msh, separator);
+	while(true)
+	{
+		line = readline("heredoc> ");
+		if (ft_strcmp(line, separator) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write_line(fd, line);
+		free(line);
+	}
+	msh->in_redir = ft_strdup(".temporary_heredoc");
+	free(separator);
+	close(fd);
+	return (true);
+}
+
+void	write_line (int fd, char *line)
+{
+	write(fd, line, ft_strlen(line));
+	write(fd, "\n", 1);
+}
+
+bool	check_valid_heredoc(t_lexer **token, t_mini *msh, char **separator)
+{
+	if ((*token)->next == NULL)
+		write_err(msh, 13, NULL);
+	else if ((*token)->next->type != STRING)
+	{
+		write_err(msh, 14, ((*token)->next->data));
+		return (false);
+	}
+	else
+		(*token)->next->type = DELIMITER;
+	(*separator) = ft_strdup((*token)->next->data);
+	return (true);
+}
+
+bool open_the_fd(int *fd, t_mini *msh, char *separator)
+{
+	(*fd) = open(".temporary_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	if((*fd) < 0)
+	{
+		write_err(msh, 15, NULL);
+		free(separator);
+		return (false);
+	}
+	else 
+		return (true);
+}
