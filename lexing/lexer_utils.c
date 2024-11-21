@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:45:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:03:56 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 18:31:15 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,18 @@ void	add_token(t_lexer **tokens, t_lexer *new_token)
 	}
 }
 
-char	*handle_quote(char *prompt)
+// char *handle_quote(t)
+
+char	*handle_quote(char *prompt, t_lexer_params *param)
 {
-	char *start = prompt + 1;
+	char	*start;
 	char	*end;
 	char	*string;
 
+	start = prompt + 1;
 	end = ft_strchr(start, 34);
+	if (!end)
+		write_err(param->msh, 16, NULL);
 	string = malloc(end - start + 1);
 	if (!string)
 		return (NULL);
@@ -78,17 +83,19 @@ char	*handle_quote(char *prompt)
 
 char	*handle_single_quote(char *prompt)
 {
+	char 	*start;
 	char	*end;
 	char	*string;
 
-	end = ft_strchr(prompt, '\'');
-	string = malloc(ft_strlen(prompt - 1));
+	start = prompt + 1;
+	end = ft_strchr(start, 39);
+	string = malloc(end - start + 1);
 	if (!string)
 		return (NULL);
 	if (prompt && end)
 	{
-		ft_memmove(string, prompt, end - prompt);
-		string[end - prompt] = '\0';
+		ft_memmove(string, start, end - start);
+		string[end - start] = '\0';
 	}
 	return (string);
 }

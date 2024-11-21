@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 18:52:18 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 18:24:36 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,20 +86,28 @@ char	*ft_strncpy(char *dst, const char *src, size_t n)
 
 void	single_qoute(t_lexer_params *param)
 {
+	char	*quote_start;
 	char	*quote_end;
 	char	*tmp;
-	int		start;
 
-	start = *(param->i)++;
-	quote_end = ft_strchr((&param->prompt[start]), '\'');
+	quote_start = &param->prompt[*(param->i)];
+	quote_end = ft_strchr(quote_start + 1, 39);
 	if (quote_end)
 	{
-		tmp = handle_single_quote(&param->prompt[start]);
+		tmp = handle_single_quote(quote_start);
+		if (!tmp)
+		{
+			write_err(param->msh, 16, NULL);
+			return ;
+		}
 		*(param->current) = create_tok(tmp, SINGLE_QUOTE);
 		add_token(param->head, *(param->current));
 		free(tmp);
-		*(param->i) = (quote_end - param->prompt) + 1;
 	}
 	else
+	{
 		write_err(param->msh, 16, NULL);
+		return ;
+	}
+	*(param->i) = ft_strlen(param->prompt);
 }

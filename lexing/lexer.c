@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:02:05 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 18:34:59 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,18 +112,30 @@ void	create_comand_token(t_lexer_params *param)
 // }
 void	double_qoute(t_lexer_params *param)
 {
+	char	*quote_start;
+	char	*quote_end;
 	char	*tmp;
 
-	tmp = handle_quote(&param->prompt[*(param->i)]);
-	if (!tmp)
+	quote_start = &param->prompt[*(param->i)];
+	quote_end = ft_strchr(quote_start + 1, 34);
+	if (quote_end)
+	{
+		tmp = handle_quote(quote_start, param);
+		if (!tmp)
+		{
+			write_err(param->msh, 16, NULL);
+			return ;
+		}
+		*(param->current) = create_tok(tmp, DOUBLE_QUOTE);
+		add_token(param->head, *(param->current));
+		free(tmp);
+		*(param->i) = ft_strlen(param->prompt);
+	}
+	else
 	{
 		write_err(param->msh, 16, NULL);
-		return ;
+		*(param->i) = ft_strlen(param->prompt);
 	}
-	*(param->current) = create_tok(tmp, DOUBLE_QUOTE);
-	add_token(param->head, *(param->current));
-	free(tmp);
-	*(param->i) += ft_strchr(&param->prompt[*(param->i) + 1], '\"') - &param->prompt[*(param->i)] + 1;
 }
 void	redirection_less(t_lexer_params *param)
 {
