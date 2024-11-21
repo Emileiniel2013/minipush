@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/19 14:21:21 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 18:52:18 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,20 +84,22 @@ char	*ft_strncpy(char *dst, const char *src, size_t n)
 	return (dst);
 }
 
-void	single_qoute(char *prompt, t_lexer **head, t_lexer **current, int *i)
+void	single_qoute(t_lexer_params *param)
 {
 	char	*quote_end;
 	char	*tmp;
+	int		start;
 
-	quote_end = ft_strchr((&prompt[(*i)]), '\'');
+	start = *(param->i)++;
+	quote_end = ft_strchr((&param->prompt[start]), '\'');
 	if (quote_end)
 	{
-		tmp = handle_single_quote(&prompt[(*i)]);
-		(*current) = create_tok(tmp, SINGLE_QUOTE);
-		add_token(head, (*current));
+		tmp = handle_single_quote(&param->prompt[start]);
+		*(param->current) = create_tok(tmp, SINGLE_QUOTE);
+		add_token(param->head, *(param->current));
 		free(tmp);
-		(*i) = quote_end - prompt + 1;
+		*(param->i) = (quote_end - param->prompt) + 1;
 	}
 	else
-		printf("Error\n");
+		write_err(param->msh, 16, NULL);
 }

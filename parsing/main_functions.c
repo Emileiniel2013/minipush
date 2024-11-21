@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:38:14 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 17:53:17 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ char	*handle_content(char **content, t_mini *msh)
 	char			*str;
 	int				i;
 	int				last_pos;
-	char			*tmp;
 	t_dollar_param	param;
 
 	i = 0;
@@ -52,7 +51,7 @@ char	*handle_content(char **content, t_mini *msh)
 		else
 			i++;
 	}
-	handle_remaining_content(content, &str, last_pos, i);
+	handle_remaining_content(*content, &str, last_pos, i);
 	return (str);
 }
 
@@ -64,7 +63,7 @@ void	handle_remaining_content(char *content, char **str, int last_pos,
 	temp = NULL;
 	if (last_pos < i)
 	{
-		temp = ft_strdup((*content) + last_pos);
+		temp = ft_strdup(content + last_pos);
 		free_and_assign(str, ft_strjoin(*str, temp));
 		free(temp);
 	}

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:39:04 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 18:04:57 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,11 @@ void	minishell_parser(char *prompt, t_mini *msh)
 	t_table	*table;
 
 	table = NULL;
-	tkn_lst = lexer(prompt);
+	tkn_lst = lexer(prompt, msh);
+	// if (tkn_lst)
+	// {
+	// 	print_token(tkn_lst);
+	// }
 	lst_head = tkn_lst;
 	if (!tkn_lst)
 		return ;

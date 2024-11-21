@@ -6,26 +6,25 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:45:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:28:32 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 18:03:56 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lexer.h"
 
-void	redirection(const char *prompt, t_lexer *current, t_lexer **head,
-		int *i)
+void	redirection(t_lexer_params *param)
 {
-	if (prompt[(*i) + 1] == '>')
+	if (param->prompt[*(param->i) + 1] == '<')
 	{
-		current = create_tok(">>", APPEND);
-		add_token(head, current);
-		(*i) += 2;
+		*(param->current) = create_tok("<<", APPEND);
+		add_token(param->head, *(param->current));
+		(*(param->i)) += 2;
 	}
 	else
 	{
-		current = create_tok(">", REDIROUT);
-		add_token(head, current);
-		(*i)++;
+		*(param->current) = create_tok("<", REDIROUT);
+		add_token(param->head, (*(param->current)));
+		(*(param->i))++;
 	}
 }
 
@@ -35,10 +34,7 @@ t_lexer	*create_tok(char *data, t_token type)
 
 	token = malloc(sizeof(t_lexer));
 	if (token == NULL)
-	{
-		perror("Malloc for tokens failed--->create_tok()\n");
 		return (NULL);
-	}
 	token->data = ft_strdup(data);
 	token->type = type;
 	token->next = NULL;
@@ -64,23 +60,19 @@ void	add_token(t_lexer **tokens, t_lexer *new_token)
 
 char	*handle_quote(char *prompt)
 {
+	char *start = prompt + 1;
 	char	*end;
 	char	*string;
 
-	end = ft_strchr(prompt, 34);
-	string = malloc(ft_strlen(prompt - 1));
+	end = ft_strchr(start, 34);
+	string = malloc(end - start + 1);
 	if (!string)
-	{
-		perror("failed to allocate memory for the new string\n");
 		return (NULL);
-	}
 	if (prompt && end)
 	{
-		ft_memmove(string, prompt, end - prompt);
-		string[end - prompt] = '\0';
+		ft_memmove(string, start, end - start);
+		string[end - start] = '\0';
 	}
-	else
-		return (NULL);
 	return (string);
 }
 
@@ -92,16 +84,11 @@ char	*handle_single_quote(char *prompt)
 	end = ft_strchr(prompt, '\'');
 	string = malloc(ft_strlen(prompt - 1));
 	if (!string)
-	{
-		perror("failed to allocate memory for the new string\n");
 		return (NULL);
-	}
 	if (prompt && end)
 	{
 		ft_memmove(string, prompt, end - prompt);
 		string[end - prompt] = '\0';
 	}
-	else
-		return (NULL);
 	return (string);
 }

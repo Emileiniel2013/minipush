@@ -6,18 +6,24 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:28:17 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 18:02:05 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lexer.h"
 
-t_lexer	*lexer(char *prompt)
+t_lexer	*lexer(char *prompt, t_mini *msh)
 {
-	t_lexer	*head;
-	t_lexer	*current;
-	int		i;
+	t_lexer			*head;
+	t_lexer			*current;
+	t_lexer_params	param;
+	int				i;
 
+	param.prompt = prompt;
+	param.head = &head;
+	param.current = &current;
+	param.i = &i;
+	param.msh = msh;
 	head = NULL;
 	current = NULL;
 	i = 0;
@@ -25,87 +31,165 @@ t_lexer	*lexer(char *prompt)
 	{
 		while (prompt[i] && ft_isspace(prompt[i]))
 			i++;
-		handle_token(prompt, &head, &current, &i);
+		handle_token(&param);
 		if (prompt[i])
 			i++;
 	}
 	return (head);
 }
 
-void	handle_token(char *prompt, t_lexer **head, t_lexer **current, int *i)
+void	handle_token(t_lexer_params *param)
 {
+	char		*prompt;
+	t_lexer		**head;
+	t_lexer		**current;
+	int			*i;
+
+	prompt = param->prompt;
+	head = param->head;
+	current = param->current;
+	i = param->i;
 	if (prompt[*i] == '|')
 		*current = create_tok("|", PIPE);
 	else if (prompt[*i] == '\"')
-		double_qoute(prompt, head, current, i);
+	{
+		double_qoute(param);
+	}
 	else if (prompt[*i] == '\'')
-		single_qoute(prompt, head, current, i);
+		single_qoute(param);
 	else if (prompt[*i] == '>')
-		redirection(prompt, head, current, i);
+		redirection(param);
 	else if (prompt[*i] == '<')
-		redirection_less(prompt, head, current, i);
+		redirection_less(param);
 	else if (prompt[*i])
-		create_comand_token(prompt, head, current, i);
+		create_comand_token(param);
 	if (prompt[*i] == '|' || prompt[*i] == '\"' || prompt[*i] == '\''
 		|| prompt[*i] == '>' || prompt[*i] == '<')
 		add_token(head, *current);
 }
 
-void	create_comand_token(char *prompt, t_lexer **head, t_lexer **current,
-		int *i)
+void	create_comand_token(t_lexer_params *param)
 {
 	size_t	len;
 	char	*buffer;
 
 	len = 0;
 	buffer = NULL;
-	while (prompt[(*i)] && !ft_isspace(prompt[(*i)]) && prompt[(*i)] != '|'
-		&& prompt[(*i)] != '<' && prompt[(*i)] != '>')
+	while (param->prompt[*(param->i)] && !ft_isspace(param->prompt[*(param->i)])
+		&& param->prompt[*(param->i)] != '|'
+		&& param->prompt[*(param->i)] != '<'
+		&& param->prompt[*(param->i)] != '>')
 	{
 		len++;
-		(*i)++;
+		(*(param->i))++;
 	}
 	buffer = malloc((len + 1) * sizeof(char));
 	if (!buffer)
 		return ;
-	ft_strncpy(buffer, prompt + ((*i) - len), len);
+	ft_strncpy(buffer, param->prompt + (*(param->i) - len), len);
 	buffer[len] = '\0';
-	(*current) = create_tok(buffer, STRING);
-	add_token(head, (*current));
+	*(param->current) = create_tok(buffer, STRING);
+	add_token(param->head, *(param->current));
 	free(buffer);
 }
 
-void	double_qoute(char *prompt, t_lexer **head, t_lexer **current, int *i)
+// void	double_qoute(t_lexer_params *param)
+// {
+// 	char	*quote_end;
+// 	char	*tmp;
+
+// 	quote_end = ft_strchr((&param->prompt[*(param->i)]), '\"');
+// 	if (quote_end)
+// 	{
+// 		tmp = handle_quote(&param->prompt[*(param->i)]);
+// 		*(param->current) = create_tok(tmp, DOUBLE_QUOTE);
+// 		add_token(param->head, *(param->current));
+// 		free(tmp);
+// 		*(param->i) = quote_end - param->prompt + 1;
+// 	}
+// 	else
+// 		write_err(param->msh, 16, NULL);
+// }
+void	double_qoute(t_lexer_params *param)
 {
-	char	*quote_end;
 	char	*tmp;
 
-	quote_end = ft_strchr((&prompt[(*i)]), '\"');
-	if (quote_end)
+	tmp = handle_quote(&param->prompt[*(param->i)]);
+	if (!tmp)
 	{
-		tmp = handle_quote(&prompt[(*i)]);
-		(*current) = create_tok(tmp, DOUBLE_QUOTE);
-		add_token(head, (*current));
-		free(tmp);
-		(*i) = quote_end - prompt + 1;
+		write_err(param->msh, 16, NULL);
+		return ;
+	}
+	*(param->current) = create_tok(tmp, DOUBLE_QUOTE);
+	add_token(param->head, *(param->current));
+	free(tmp);
+	*(param->i) += ft_strchr(&param->prompt[*(param->i) + 1], '\"') - &param->prompt[*(param->i)] + 1;
+}
+void	redirection_less(t_lexer_params *param)
+{
+	if (param->prompt[*(param->i) + 1] == '<')
+	{
+		*(param->current) = create_tok("<<", HEREDOC);
+		add_token(param->head, *(param->current));
+		(*(param->i)) += 2;
 	}
 	else
-		printf("Error\n");
+	{
+		*(param->current) = create_tok("<", REDIRIN);
+		add_token(param->head, (*(param->current)));
+		(*(param->i))++;
+	}
 }
 
-void	redirection_less(const char *prompt, t_lexer **head, t_lexer **current,
-		int *i)
+
+void	print_token(t_lexer *tokens)
 {
-	if (prompt[(*i) + 1] == '<')
+	char *str;
+	// printf("ERROR HERE\n");
+	while (tokens)
 	{
-		(*current) = create_tok("<<", HEREDOC);
-		add_token(head, (*current));
-		(*i) += 2;
-	}
-	else
-	{
-		(*current) = create_tok("<", REDIRIN);
-		add_token(head, (*current));
-		(*i)++;
+		// printf("ERROR HERE1\n");
+		if (tokens->type == STRING)
+		{
+			// printf("ERROR HERE2\n");
+		str = "COMMAND";
+		}
+		else if (tokens->type == PIPE)
+		{
+			// printf("ERROR HERE3\n");
+			str = "PIPE";
+		}
+		else if (tokens->type == REDIROUT)
+		{
+			// printf("ERROR HERE4\n");
+			str = "RIDIRECTION_OUT";
+		}
+		else if (tokens->type == REDIRIN)
+		{
+			// printf("ERROR HERE4\n");
+			str = "RIDIRECTION_IN";
+		}
+		else if (tokens->type == HEREDOC)
+		{
+			// printf("ERROR HERE4\n");
+			str = "RIDIRECTION_LESS_LESS";
+		}
+		else if (tokens->type == APPEND)
+		{
+			// printf("ERROR HERE4\n");
+			str = "RIDIRECTION_GREAT_GREAT";
+		}
+		else if (tokens->type == DOUBLE_QUOTE)
+		{
+			str = "DOUBLE_QUOTE";
+		}
+		else
+		{
+			// printf("ERROR HERE5\n");
+			str = "UNKNOWN";
+		}
+		// printf("ERROR HERE666\n");
+		printf("Token : %s  Type: %s\n", tokens->data, str);
+		tokens = tokens->next;
 	}
 }

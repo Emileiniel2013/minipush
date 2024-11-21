@@ -6,23 +6,23 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:50:07 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:14:02 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/20 18:30:48 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void	leaks(void)
-{
-	system("minishell");
-}
+// void	leaks(void)
+// {
+// 	system("minishell");
+// }
 
+//atexit(leaks);
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_mini	*minish;
 	char	*line;
 
-	atexit(leaks);
 	handle_signals();
 	minish = init_mini_vars(argc, argv, envp);
 	while (1)
