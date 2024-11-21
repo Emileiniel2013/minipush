@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:27:42 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:30:51 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 18:46:06 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,13 +111,13 @@ char		*ft_strncpy(char *dst, const char *src, size_t n);
 void		add_token(t_lexer **tokens, t_lexer *new_token);
 t_lexer		*create_tok(char *data, t_token type);
 char		*handle_quote(char *prompt, t_lexer_params *param);
-char		*handle_single_quote(char *prompt);
+char		*handle_single_quote(char *prompt, t_lexer_params *param);
 
 // ERROR HANDLING
 void		write_err(t_mini *minish, int code, char *arg);
 void		write_simple_err(int code);
 void		write_arg_err(int code, char *arg);
 
-void	print_token(t_lexer *tokens);
+//void		print_token(t_lexer *tokens);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:34:59 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 18:41:18 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,7 @@ void	handle_token(t_lexer_params *param)
 	if (prompt[*i] == '|')
 		*current = create_tok("|", PIPE);
 	else if (prompt[*i] == '\"')
-	{
 		double_qoute(param);
-	}
 	else if (prompt[*i] == '\'')
 		single_qoute(param);
 	else if (prompt[*i] == '>')
@@ -93,23 +91,6 @@ void	create_comand_token(t_lexer_params *param)
 	free(buffer);
 }
 
-// void	double_qoute(t_lexer_params *param)
-// {
-// 	char	*quote_end;
-// 	char	*tmp;
-
-// 	quote_end = ft_strchr((&param->prompt[*(param->i)]), '\"');
-// 	if (quote_end)
-// 	{
-// 		tmp = handle_quote(&param->prompt[*(param->i)]);
-// 		*(param->current) = create_tok(tmp, DOUBLE_QUOTE);
-// 		add_token(param->head, *(param->current));
-// 		free(tmp);
-// 		*(param->i) = quote_end - param->prompt + 1;
-// 	}
-// 	else
-// 		write_err(param->msh, 16, NULL);
-// }
 void	double_qoute(t_lexer_params *param)
 {
 	char	*quote_start;
@@ -137,6 +118,7 @@ void	double_qoute(t_lexer_params *param)
 		*(param->i) = ft_strlen(param->prompt);
 	}
 }
+
 void	redirection_less(t_lexer_params *param)
 {
 	if (param->prompt[*(param->i) + 1] == '<')
@@ -153,55 +135,54 @@ void	redirection_less(t_lexer_params *param)
 	}
 }
 
-
-void	print_token(t_lexer *tokens)
-{
-	char *str;
-	// printf("ERROR HERE\n");
-	while (tokens)
-	{
-		// printf("ERROR HERE1\n");
-		if (tokens->type == STRING)
-		{
-			// printf("ERROR HERE2\n");
-		str = "COMMAND";
-		}
-		else if (tokens->type == PIPE)
-		{
-			// printf("ERROR HERE3\n");
-			str = "PIPE";
-		}
-		else if (tokens->type == REDIROUT)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_OUT";
-		}
-		else if (tokens->type == REDIRIN)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_IN";
-		}
-		else if (tokens->type == HEREDOC)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_LESS_LESS";
-		}
-		else if (tokens->type == APPEND)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_GREAT_GREAT";
-		}
-		else if (tokens->type == DOUBLE_QUOTE)
-		{
-			str = "DOUBLE_QUOTE";
-		}
-		else
-		{
-			// printf("ERROR HERE5\n");
-			str = "UNKNOWN";
-		}
-		// printf("ERROR HERE666\n");
-		printf("Token : %s  Type: %s\n", tokens->data, str);
-		tokens = tokens->next;
-	}
-}
+// void	print_token(t_lexer *tokens)
+// {
+// 	char *str;
+// 	// printf("ERROR HERE\n");
+// 	while (tokens)
+// 	{
+// 		// printf("ERROR HERE1\n");
+// 		if (tokens->type == STRING)
+// 		{
+// 			// printf("ERROR HERE2\n");
+// 		str = "COMMAND";
+// 		}
+// 		else if (tokens->type == PIPE)
+// 		{
+// 			// printf("ERROR HERE3\n");
+// 			str = "PIPE";
+// 		}
+// 		else if (tokens->type == REDIROUT)
+// 		{
+// 			// printf("ERROR HERE4\n");
+// 			str = "RIDIRECTION_OUT";
+// 		}
+// 		else if (tokens->type == REDIRIN)
+// 		{
+// 			// printf("ERROR HERE4\n");
+// 			str = "RIDIRECTION_IN";
+// 		}
+// 		else if (tokens->type == HEREDOC)
+// 		{
+// 			// printf("ERROR HERE4\n");
+// 			str = "RIDIRECTION_LESS_LESS";
+// 		}
+// 		else if (tokens->type == APPEND)
+// 		{
+// 			// printf("ERROR HERE4\n");
+// 			str = "RIDIRECTION_GREAT_GREAT";
+// 		}
+// 		else if (tokens->type == DOUBLE_QUOTE)
+// 		{
+// 			str = "DOUBLE_QUOTE";
+// 		}
+// 		else
+// 		{
+// 			// printf("ERROR HERE5\n");
+// 			str = "UNKNOWN";
+// 		}
+// 		// printf("ERROR HERE666\n");
+// 		printf("Token : %s  Type: %s\n", tokens->data, str);
+// 		tokens = tokens->next;
+// 	}
+// }

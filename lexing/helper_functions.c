@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:24:36 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 18:45:01 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	single_qoute(t_lexer_params *param)
 	quote_end = ft_strchr(quote_start + 1, 39);
 	if (quote_end)
 	{
-		tmp = handle_single_quote(quote_start);
+		tmp = handle_single_quote(quote_start, param);
 		if (!tmp)
 		{
 			write_err(param->msh, 16, NULL);
@@ -103,11 +103,11 @@ void	single_qoute(t_lexer_params *param)
 		*(param->current) = create_tok(tmp, SINGLE_QUOTE);
 		add_token(param->head, *(param->current));
 		free(tmp);
+		*(param->i) = ft_strlen(param->prompt);
 	}
 	else
 	{
 		write_err(param->msh, 16, NULL);
-		return ;
+		*(param->i) = ft_strlen(param->prompt);
 	}
-	*(param->i) = ft_strlen(param->prompt);
 }
