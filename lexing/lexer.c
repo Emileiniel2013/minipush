@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:41:18 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/23 17:47:18 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,13 @@ t_lexer	*lexer(char *prompt, t_mini *msh)
 	{
 		while (prompt[i] && ft_isspace(prompt[i]))
 			i++;
-		handle_token(&param);
 		if (prompt[i])
-			i++;
+		{
+		//	printf("Current index before handle_token: %d\n", i);
+			handle_token(&param);
+		//	printf("Current index after handle_token: %d\n", i);
+		}
+		i++;
 	}
 	return (head);
 }
@@ -49,6 +53,14 @@ void	handle_token(t_lexer_params *param)
 	head = param->head;
 	current = param->current;
 	i = param->i;
+	//printf("Handling token at index: %d, char: %c\n", *i, prompt[*i]);
+	if (!ft_isprint(prompt[*i])) {
+        // If it's not a printable character, handle it as an invalid token
+        *(param->current) = create_tok("INVALID_CHAR", UNKNOWN);
+        add_token(head, *current);
+        (*(param->i))++;  // Skip invalid character
+        return;
+    }
 	if (prompt[*i] == '|')
 		*current = create_tok("|", PIPE);
 	else if (prompt[*i] == '\"')
@@ -103,20 +115,19 @@ void	double_qoute(t_lexer_params *param)
 	{
 		tmp = handle_quote(quote_start, param);
 		if (!tmp)
-		{
-			write_err(param->msh, 16, NULL);
 			return ;
-		}
 		*(param->current) = create_tok(tmp, DOUBLE_QUOTE);
 		add_token(param->head, *(param->current));
 		free(tmp);
-		*(param->i) = ft_strlen(param->prompt);
+		*(param->i) += (quote_end - quote_start + 1);
+		//*(param->i) = ft_strlen(param->prompt);
 	}
-	else
+	else if (!quote_end)
 	{
 		write_err(param->msh, 16, NULL);
 		*(param->i) = ft_strlen(param->prompt);
 	}
+	//printf("Index after handling double quote: %d\n", *(param->i));
 }
 
 void	redirection_less(t_lexer_params *param)
@@ -135,54 +146,58 @@ void	redirection_less(t_lexer_params *param)
 	}
 }
 
-// void	print_token(t_lexer *tokens)
-// {
-// 	char *str;
-// 	// printf("ERROR HERE\n");
-// 	while (tokens)
-// 	{
-// 		// printf("ERROR HERE1\n");
-// 		if (tokens->type == STRING)
-// 		{
-// 			// printf("ERROR HERE2\n");
-// 		str = "COMMAND";
-// 		}
-// 		else if (tokens->type == PIPE)
-// 		{
-// 			// printf("ERROR HERE3\n");
-// 			str = "PIPE";
-// 		}
-// 		else if (tokens->type == REDIROUT)
-// 		{
-// 			// printf("ERROR HERE4\n");
-// 			str = "RIDIRECTION_OUT";
-// 		}
-// 		else if (tokens->type == REDIRIN)
-// 		{
-// 			// printf("ERROR HERE4\n");
-// 			str = "RIDIRECTION_IN";
-// 		}
-// 		else if (tokens->type == HEREDOC)
-// 		{
-// 			// printf("ERROR HERE4\n");
-// 			str = "RIDIRECTION_LESS_LESS";
-// 		}
-// 		else if (tokens->type == APPEND)
-// 		{
-// 			// printf("ERROR HERE4\n");
-// 			str = "RIDIRECTION_GREAT_GREAT";
-// 		}
-// 		else if (tokens->type == DOUBLE_QUOTE)
-// 		{
-// 			str = "DOUBLE_QUOTE";
-// 		}
-// 		else
-// 		{
-// 			// printf("ERROR HERE5\n");
-// 			str = "UNKNOWN";
-// 		}
-// 		// printf("ERROR HERE666\n");
-// 		printf("Token : %s  Type: %s\n", tokens->data, str);
-// 		tokens = tokens->next;
-// 	}
-// }
+void	print_token(t_lexer *tokens)
+{
+	char *str;
+	// printf("ERROR HERE\n");
+	while (tokens)
+	{
+		// printf("ERROR HERE1\n");
+		if (tokens->type == STRING)
+		{
+			// printf("ERROR HERE2\n");
+		str = "STRING";
+		}
+		else if (tokens->type == PIPE)
+		{
+			// printf("ERROR HERE3\n");
+			str = "PIPE";
+		}
+		else if (tokens->type == REDIROUT)
+		{
+			// printf("ERROR HERE4\n");
+			str = "RIDIRECTION_OUT";
+		}
+		else if (tokens->type == REDIRIN)
+		{
+			// printf("ERROR HERE4\n");
+			str = "RIDIRECTION_IN";
+		}
+		else if (tokens->type == HEREDOC)
+		{
+			// printf("ERROR HERE4\n");
+			str = "RIDIRECTION_LESS_LESS";
+		}
+		else if (tokens->type == APPEND)
+		{
+			// printf("ERROR HERE4\n");
+			str = "RIDIRECTION_GREAT_GREAT";
+		}
+		else if (tokens->type == DOUBLE_QUOTE)
+		{
+			str = "DOUBLE_QUOTE";
+		}
+		else if (tokens->type == SINGLE_QUOTE)
+		{
+			str = "S_QUOTE";
+		}
+		else
+		{
+			// printf("ERROR HERE5\n");
+			str = "UNKNOWN";
+		}
+		// printf("ERROR HERE666\n");
+		printf("Token : %s  Type: %s\n", tokens->data, str);
+		tokens = tokens->next;
+	}
+}

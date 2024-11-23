@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:41:45 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/23 17:48:45 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,8 @@ void	minishell_parser(char *prompt, t_mini *msh)
 
 	table = NULL;
 	tkn_lst = lexer(prompt, msh);
-	// if (tkn_lst)
-	// {
+	// if(tkn_lst)
 	// 	print_token(tkn_lst);
-	// }
 	lst_head = tkn_lst;
 	if (!tkn_lst)
 		return ;
@@ -31,7 +29,6 @@ void	minishell_parser(char *prompt, t_mini *msh)
 	{
 		if (!pass_token_to_table(&tkn_lst, msh, &table))
 		{
-			printf("Error\n");
 			free_parser(msh, lst_head, table);
 			return ;
 		}
@@ -43,31 +40,34 @@ void	minishell_parser(char *prompt, t_mini *msh)
 
 bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table)
 {
-	bool	res;
-
-	res = true;
-	if ((*token)->data == NULL)
-		return (false);
-	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE
-		|| (*token)->type == SINGLE_QUOTE)
+	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE)
 	{
-		res = exp_env_vars(&(*token)->data, minish);
+		if (!exp_env_vars(&(*token)->data, minish))
+			return (false);
 		add_token_to_table(table, *token);
 	}
 	else if ((*token)->type == PIPE)
-		res = handle_pipe(*token, minish, *table);
+	{
+		if (!handle_pipe(*token, minish, *table))
+			return (false);
+	}
 	else if ((*token)->type == REDIRIN || (*token)->type == REDIROUT
 		|| (*token)->type == REDIROUTAPP)
 	{
-		res = handle_redir(token, minish, table);
+		if (!handle_redir(token, minish, table))
+			return (false);
 	}
 	else if ((*token)->type == HEREDOC)
 	{
-		res = handle_heredoc(token, minish, table);
+		if (!handle_heredoc(token, minish, table))
+			return (false);
 		add_token_to_table(table, *token);
 	}
+	else if ((*token)->type == SINGLE_QUOTE)
+		add_token_to_table(table, (*token));
 	return (true);
 }
+
 
 bool	check_valid_pipe(t_lexer *token, t_table *table, t_mini *minish)
 {

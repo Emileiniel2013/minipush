@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:00:28 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/20 16:04:57 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/21 19:20:05 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,20 @@ bool	open_the_fd(int *fd, t_mini *msh, char *separator)
 	}
 	else
 		return (true);
+}
+
+bool	is_in_single_quote(char *content)
+{
+	int		i;
+	bool	in_single_quote;
+
+	i = 0;
+	in_single_quote = false;
+	while (content[i])
+	{
+		if (content[i] == '\'')
+			in_single_quote = !in_single_quote;
+		i++;
+	}
+	return (in_single_quote);
 }

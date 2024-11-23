@@ -6,25 +6,25 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:45:01 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/23 15:53:15 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lexer.h"
 
-// void	free_token(t_lexer *head)
-// {
-// 	t_lexer	*tmp;
+void	free_token(t_lexer *head)
+{
+	t_lexer	*tmp;
 
-// 	while (head)
-// 	{
-// 		tmp = head;
-// 		head = head->next;
-// 		free(tmp->data);
-// 		free(tmp);
-// 	}
-// 	free(head);
-// }
+	while (head)
+	{
+		tmp = head;
+		head = head->next;
+		free(tmp->data);
+		free(tmp);
+	}
+	free(head);
+}
 int	ft_isspace(char c)
 {
 	return (c == ' ');
@@ -103,7 +103,8 @@ void	single_qoute(t_lexer_params *param)
 		*(param->current) = create_tok(tmp, SINGLE_QUOTE);
 		add_token(param->head, *(param->current));
 		free(tmp);
-		*(param->i) = ft_strlen(param->prompt);
+		//*(param->i) = ft_strlen(param->prompt);
+		*(param->i) += (quote_end - quote_start + 1);
 	}
 	else
 	{

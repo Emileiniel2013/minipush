@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:27:42 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:46:06 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/23 12:45:26 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ typedef struct s_lexer_params
 	t_mini		*msh;
 }	t_lexer_params;
 
-// // MAIN FUNCTIONS
+// MAIN FUNCTIONS
 t_lexer		*lexer(char *prompt, t_mini *msh);
 
 void		handle_token(t_lexer_params *param);
@@ -118,6 +118,26 @@ void		write_err(t_mini *minish, int code, char *arg);
 void		write_simple_err(int code);
 void		write_arg_err(int code, char *arg);
 
-//void		print_token(t_lexer *tokens);
+void		print_token(t_lexer *tokens);
 
+// // MAIN FUNCTIONS
+// t_lexer		*process_input(char *line, t_mini *mini);
+// char		*get_next_token(char *line, int *q_type, t_mini *mini);
+// char		*handle_quote(t_mini *mini, int *q_type, int *index, char *line);
+// void		add_tkn_to_lst(t_lexer **list_head, char *content, t_token token);
+
+// // HELPER FUNCTIONS
+// void		set_quote_type(int *q_type, char quote);
+// t_token		identify_token(char *token, int q_type);
+
+// // UTILS
+// bool		ft_isspace(char index);
+// char		*ft_strndup(char *s1, size_t len);
+// t_lexer		*create_new_node(char *content, t_token token);
+// void		free_tkn_lst(t_lexer *token_lst);
+
+// // ERROR HANDLING
+// void		write_err(t_mini *minish, int code, char *arg);
+// void		write_simple_err(int code);
+// void		write_arg_err(int code, char *arg);
 #endif

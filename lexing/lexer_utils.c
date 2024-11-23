@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:45:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/21 18:45:35 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/23 17:36:41 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 void	redirection(t_lexer_params *param)
 {
-	if (param->prompt[*(param->i) + 1] == '<')
+	if (param->prompt[*(param->i) + 1] == '>')
 	{
-		*(param->current) = create_tok("<<", APPEND);
+		*(param->current) = create_tok(">>", APPEND);
 		add_token(param->head, *(param->current));
 		(*(param->i)) += 2;
 	}
 	else
 	{
-		*(param->current) = create_tok("<", REDIROUT);
+		*(param->current) = create_tok(">", REDIROUT);
 		add_token(param->head, (*(param->current)));
 		(*(param->i))++;
 	}
