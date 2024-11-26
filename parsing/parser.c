@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 17:26:45 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:23:19 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ bool	pass_token_to_table(t_tkn_lst **token, t_mini *minish, t_table **table)
 	{
 		if (!exp_env_vars(&(*token)->content, minish))
 			return (false);
-		add_token_to_table(table, *token);
 	}
 	else if ((*token)->tkn == PIPE)
 	{
@@ -59,10 +58,10 @@ bool	pass_token_to_table(t_tkn_lst **token, t_mini *minish, t_table **table)
 	{
 		if (!handle_heredoc(token, minish, table))
 			return (false);
-		add_token_to_table(table, *token);
 	}
 	else if ((*token)->tkn == SINGLE_QUOTE)
 		add_token_to_table(table, (*token));
+	add_token_to_table(table, *token);
 	return (true);
 }
 
@@ -82,7 +81,8 @@ bool	handle_pipe(t_tkn_lst *token, t_mini *minish, t_table *table)
 	t_table	*node;
 	t_table	*current;
 
-	check_valid_pipe(token, table, minish);
+	if (!check_valid_pipe(token, table, minish))
+		return (false);
 	current = table;
 	while (current && current->next)
 		current = current->next;
