@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 11:41:14 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 16:42:03 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/26 17:42:09 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,7 @@ void	execute_file(t_mini *minish)
 	path = ft_strjoin(filename, minish->table->command->content + 1);
 	ft_free(&filename);
 	if (access(path, X_OK) == 0)
-	{
-		signal(SIGINT, SIG_IGN);
 		execute_path(minish, path);
-	}
 	else
 	{
 		write_err(minish, 22, minish->table->command->content);
