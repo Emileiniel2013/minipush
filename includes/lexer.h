@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:27:42 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/11 11:33:28 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:17:48 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void		add_tkn_to_lst(t_tkn_lst **list_head, char *content, t_tkn token);
 
 // HELPER FUNCTIONS
 void		set_quote_type(int *q_type, char quote);
-t_tkn		identify_token(char *token, int q_type);
+t_tkn		identify_token(char *token, int *q_type);
 
 // UTILS
 bool		ft_isspace(char index);

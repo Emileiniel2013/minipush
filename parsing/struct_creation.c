@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:16:25 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 17:27:21 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:42:53 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 
 void	add_token_to_table(t_table **table, t_tkn_lst *token_lst)
 {
-	t_table	*new_node;
 	t_table	*current_node;
 	t_tkn	token;
 
-	new_node = NULL;
 	current_node = NULL;
 	token = token_lst->tkn;
 	if (token == STRING || token == DOUBLE_QUOTE || token == SINGLE_QUOTE)
@@ -74,10 +72,8 @@ void	create_cmd_table(t_table **table, char *content)
 
 void	add_redir_to_table(t_tkn_lst **token, t_table **table)
 {
-	t_table	*new_node;
 	t_table	*current_node;
 
-	new_node = NULL;
 	current_node = NULL;
 	if ((*token)->tkn == STRING || (*token)->tkn == DOUBLE_QUOTE
 		|| (*token)->tkn == SINGLE_QUOTE)

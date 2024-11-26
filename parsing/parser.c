@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 18:23:19 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/26 18:57:58 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	minishell_parser(char *prompt, t_mini *msh)
 		}
 		tkn_lst = tkn_lst->next;
 	}
+	free_tkn_lst(lst_head);
 	msh->table = table;
 	msh->table_head = table;
 }
@@ -59,8 +60,6 @@ bool	pass_token_to_table(t_tkn_lst **token, t_mini *minish, t_table **table)
 		if (!handle_heredoc(token, minish, table))
 			return (false);
 	}
-	else if ((*token)->tkn == SINGLE_QUOTE)
-		add_token_to_table(table, (*token));
 	add_token_to_table(table, *token);
 	return (true);
 }
