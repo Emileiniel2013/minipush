@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main_functions_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:00:28 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/21 19:20:05 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/26 17:27:15 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
 
-bool	handle_heredoc(t_lexer **token, t_mini *msh, t_table **table)
+bool	handle_heredoc(t_tkn_lst **token, t_mini *msh, t_table **table)
 {
 	char	*separator;
 	char	*line;
@@ -46,18 +46,18 @@ void	write_line(int fd, char *line)
 	write(fd, "\n", 1);
 }
 
-bool	check_valid_heredoc(t_lexer **token, t_mini *msh, char **separator)
+bool	check_valid_heredoc(t_tkn_lst **token, t_mini *msh, char **separator)
 {
 	if ((*token)->next == NULL)
 		write_err(msh, 13, NULL);
-	else if ((*token)->next->type != STRING)
+	else if ((*token)->next->tkn != STRING)
 	{
-		write_err(msh, 14, ((*token)->next->data));
+		write_err(msh, 14, ((*token)->next->content));
 		return (false);
 	}
 	else
-		(*token)->next->type = DELIMITER;
-	(*separator) = ft_strdup((*token)->next->data);
+		(*token)->next->tkn = DELIMITER;
+	(*separator) = ft_strdup((*token)->next->content);
 	return (true);
 }
 

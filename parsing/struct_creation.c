@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   struct_creation.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:16:25 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:39:15 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/26 17:27:21 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
 
-void	add_token_to_table(t_table **table, t_lexer *token_lst)
+void	add_token_to_table(t_table **table, t_tkn_lst *token_lst)
 {
 	t_table	*new_node;
 	t_table	*current_node;
-	t_token	token;
+	t_tkn	token;
 
 	new_node = NULL;
 	current_node = NULL;
-	token = token_lst->type;
+	token = token_lst->tkn;
 	if (token == STRING || token == DOUBLE_QUOTE || token == SINGLE_QUOTE)
 	{
 		if (!(*table))
@@ -28,7 +28,7 @@ void	add_token_to_table(t_table **table, t_lexer *token_lst)
 		current_node = *table;
 		while (current_node->next)
 			current_node = current_node->next;
-		create_cmd_table(&current_node, token_lst->data);
+		create_cmd_table(&current_node, token_lst->content);
 	}
 }
 
@@ -72,21 +72,34 @@ void	create_cmd_table(t_table **table, char *content)
 	}
 }
 
-void	add_redir_to_table(t_lexer **token, t_table **table)
+void	add_redir_to_table(t_tkn_lst **token, t_table **table)
 {
 	t_table	*new_node;
 	t_table	*current_node;
 
 	new_node = NULL;
 	current_node = NULL;
-	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE
-		|| (*token)->type == SINGLE_QUOTE)
+	if ((*token)->tkn == STRING || (*token)->tkn == DOUBLE_QUOTE
+		|| (*token)->tkn == SINGLE_QUOTE)
 	{
 		if (!(*table))
 			create_table(table, false);
 		current_node = *table;
 		while (current_node->next)
 			current_node = current_node->next;
-		create_cmd_table(&current_node, (*token)->data);
+		create_cmd_table(&current_node, (*token)->content);
 	}
+}
+
+int	creat_close_file(t_mini *minish)
+{
+	int	fd;
+
+	fd = -1;
+	fd = open(minish->out_redir, O_CREAT, 0644);
+	if (fd < 0)
+		return (write_err(minish, 7, NULL), -1);
+	close(fd);
+	free(minish->out_redir);
+	return (0);
 }

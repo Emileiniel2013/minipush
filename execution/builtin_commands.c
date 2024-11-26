@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:24:36 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/22 17:26:00 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/07 17:51:38 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	handle_echo(t_mini *minish)
 		cpy = cpy->next;
 		while (cpy != NULL)
 		{
-			//exp_env_vars(&cpy->content, minish);
 			write(minish->redirfd, cpy->content, ft_strlen(cpy->content));
 			cpy = cpy->next;
 			if (cpy != NULL)

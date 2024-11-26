@@ -3,201 +3,104 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/23 17:47:18 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/08 15:51:13 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lexer.h"
 
-t_lexer	*lexer(char *prompt, t_mini *msh)
+t_tkn_lst	*process_input(char *line, t_mini *mini)
 {
-	t_lexer			*head;
-	t_lexer			*current;
-	t_lexer_params	param;
-	int				i;
+	t_tkn_lst	*token_lst_head;
+	char		*content;
+	int			quote_type;
+	t_tkn		type;
 
-	param.prompt = prompt;
-	param.head = &head;
-	param.current = &current;
-	param.i = &i;
-	param.msh = msh;
-	head = NULL;
-	current = NULL;
-	i = 0;
-	while (prompt[i])
+	token_lst_head = NULL;
+	quote_type = 0;
+	if (line[0] != '\0')
+		add_history(line);
+	content = get_next_token(line, &quote_type, mini);
+	while (content != NULL)
 	{
-		while (prompt[i] && ft_isspace(prompt[i]))
-			i++;
-		if (prompt[i])
-		{
-		//	printf("Current index before handle_token: %d\n", i);
-			handle_token(&param);
-		//	printf("Current index after handle_token: %d\n", i);
-		}
-		i++;
+		type = identify_token(content, quote_type);
+		add_tkn_to_lst(&token_lst_head, content, type);
+		free(content);
+		content = get_next_token(line, &quote_type, mini);
 	}
-	return (head);
+	return (token_lst_head);
 }
 
-void	handle_token(t_lexer_params *param)
+char	*get_next_token(char *line, int *quote_type, t_mini *mini)
 {
-	char		*prompt;
-	t_lexer		**head;
-	t_lexer		**current;
-	int			*i;
+	static int	index = 0;
+	int			start;
+	char		*token;
 
-	prompt = param->prompt;
-	head = param->head;
-	current = param->current;
-	i = param->i;
-	//printf("Handling token at index: %d, char: %c\n", *i, prompt[*i]);
-	if (!ft_isprint(prompt[*i])) {
-        // If it's not a printable character, handle it as an invalid token
-        *(param->current) = create_tok("INVALID_CHAR", UNKNOWN);
-        add_token(head, *current);
-        (*(param->i))++;  // Skip invalid character
-        return;
-    }
-	if (prompt[*i] == '|')
-		*current = create_tok("|", PIPE);
-	else if (prompt[*i] == '\"')
-		double_qoute(param);
-	else if (prompt[*i] == '\'')
-		single_qoute(param);
-	else if (prompt[*i] == '>')
-		redirection(param);
-	else if (prompt[*i] == '<')
-		redirection_less(param);
-	else if (prompt[*i])
-		create_comand_token(param);
-	if (prompt[*i] == '|' || prompt[*i] == '\"' || prompt[*i] == '\''
-		|| prompt[*i] == '>' || prompt[*i] == '<')
-		add_token(head, *current);
+	start = index;
+	token = NULL;
+	while (line[index] && ft_isspace(line[index]))
+		index++;
+	if (line[index] == '"' || line[index] == '\'')
+		token = handle_quote(mini, quote_type, &index, line);
+	else
+	{
+		start = index;
+		while (line[index] && !ft_isspace(line[index]))
+			index++;
+		if (index > start)
+			token = ft_strndup(line + start, index - start);
+		else
+			index = 0;
+	}
+	return (token);
 }
 
-void	create_comand_token(t_lexer_params *param)
+char	*handle_quote(t_mini *mini, int *quote_type, int *index, char *line)
 {
-	size_t	len;
-	char	*buffer;
+	char	quote;
+	int		start;
+	char	*token;
 
-	len = 0;
-	buffer = NULL;
-	while (param->prompt[*(param->i)] && !ft_isspace(param->prompt[*(param->i)])
-		&& param->prompt[*(param->i)] != '|'
-		&& param->prompt[*(param->i)] != '<'
-		&& param->prompt[*(param->i)] != '>')
+	set_quote_type(quote_type, line[*index]);
+	quote = line[(*index)++];
+	start = *index;
+	token = NULL;
+	while (line[*index] && line[*index] != quote)
+		(*index)++;
+	if (line[*index] == quote)
 	{
-		len++;
-		(*(param->i))++;
-	}
-	buffer = malloc((len + 1) * sizeof(char));
-	if (!buffer)
-		return ;
-	ft_strncpy(buffer, param->prompt + (*(param->i) - len), len);
-	buffer[len] = '\0';
-	*(param->current) = create_tok(buffer, STRING);
-	add_token(param->head, *(param->current));
-	free(buffer);
-}
-
-void	double_qoute(t_lexer_params *param)
-{
-	char	*quote_start;
-	char	*quote_end;
-	char	*tmp;
-
-	quote_start = &param->prompt[*(param->i)];
-	quote_end = ft_strchr(quote_start + 1, 34);
-	if (quote_end)
-	{
-		tmp = handle_quote(quote_start, param);
-		if (!tmp)
-			return ;
-		*(param->current) = create_tok(tmp, DOUBLE_QUOTE);
-		add_token(param->head, *(param->current));
-		free(tmp);
-		*(param->i) += (quote_end - quote_start + 1);
-		//*(param->i) = ft_strlen(param->prompt);
-	}
-	else if (!quote_end)
-	{
-		write_err(param->msh, 16, NULL);
-		*(param->i) = ft_strlen(param->prompt);
-	}
-	//printf("Index after handling double quote: %d\n", *(param->i));
-}
-
-void	redirection_less(t_lexer_params *param)
-{
-	if (param->prompt[*(param->i) + 1] == '<')
-	{
-		*(param->current) = create_tok("<<", HEREDOC);
-		add_token(param->head, *(param->current));
-		(*(param->i)) += 2;
+		token = ft_strndup(line + start, (*index) - start);
+		(*index)++;
+		return (token);
 	}
 	else
 	{
-		*(param->current) = create_tok("<", REDIRIN);
-		add_token(param->head, (*(param->current)));
-		(*(param->i))++;
+		write_err(mini, 16, NULL);
+		*index = 0;
+		return ("\0");
 	}
 }
 
-void	print_token(t_lexer *tokens)
+void	add_tkn_to_lst(t_tkn_lst **list_head, char *content, t_tkn token)
 {
-	char *str;
-	// printf("ERROR HERE\n");
-	while (tokens)
+	t_tkn_lst	*new_token;
+	t_tkn_lst	*current;
+
+	current = NULL;
+	new_token = create_new_node(content, token);
+	if (!new_token)
+		return ;
+	if (*list_head == NULL)
+		*list_head = new_token;
+	else
 	{
-		// printf("ERROR HERE1\n");
-		if (tokens->type == STRING)
-		{
-			// printf("ERROR HERE2\n");
-		str = "STRING";
-		}
-		else if (tokens->type == PIPE)
-		{
-			// printf("ERROR HERE3\n");
-			str = "PIPE";
-		}
-		else if (tokens->type == REDIROUT)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_OUT";
-		}
-		else if (tokens->type == REDIRIN)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_IN";
-		}
-		else if (tokens->type == HEREDOC)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_LESS_LESS";
-		}
-		else if (tokens->type == APPEND)
-		{
-			// printf("ERROR HERE4\n");
-			str = "RIDIRECTION_GREAT_GREAT";
-		}
-		else if (tokens->type == DOUBLE_QUOTE)
-		{
-			str = "DOUBLE_QUOTE";
-		}
-		else if (tokens->type == SINGLE_QUOTE)
-		{
-			str = "S_QUOTE";
-		}
-		else
-		{
-			// printf("ERROR HERE5\n");
-			str = "UNKNOWN";
-		}
-		// printf("ERROR HERE666\n");
-		printf("Token : %s  Type: %s\n", tokens->data, str);
-		tokens = tokens->next;
+		current = *list_head;
+		while (current->next != NULL)
+			current = current->next;
+		current->next = new_token;
 	}
 }

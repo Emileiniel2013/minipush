@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/23 17:48:45 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/26 17:26:45 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,12 @@
 
 void	minishell_parser(char *prompt, t_mini *msh)
 {
-	t_lexer	*tkn_lst;
-	t_lexer	*lst_head;
-	t_table	*table;
+	t_tkn_lst	*tkn_lst;
+	t_tkn_lst	*lst_head;
+	t_table		*table;
 
 	table = NULL;
-	tkn_lst = lexer(prompt, msh);
-	// if(tkn_lst)
-	// 	print_token(tkn_lst);
+	tkn_lst = process_input(prompt, msh);
 	lst_head = tkn_lst;
 	if (!tkn_lst)
 		return ;
@@ -38,49 +36,48 @@ void	minishell_parser(char *prompt, t_mini *msh)
 	msh->table_head = table;
 }
 
-bool	pass_token_to_table(t_lexer **token, t_mini *minish, t_table **table)
+bool	pass_token_to_table(t_tkn_lst **token, t_mini *minish, t_table **table)
 {
-	if ((*token)->type == STRING || (*token)->type == DOUBLE_QUOTE)
+	if ((*token)->tkn == STRING || (*token)->tkn == DOUBLE_QUOTE)
 	{
-		if (!exp_env_vars(&(*token)->data, minish))
+		if (!exp_env_vars(&(*token)->content, minish))
 			return (false);
 		add_token_to_table(table, *token);
 	}
-	else if ((*token)->type == PIPE)
+	else if ((*token)->tkn == PIPE)
 	{
 		if (!handle_pipe(*token, minish, *table))
 			return (false);
 	}
-	else if ((*token)->type == REDIRIN || (*token)->type == REDIROUT
-		|| (*token)->type == REDIROUTAPP)
+	else if ((*token)->tkn == REDIRIN || (*token)->tkn == REDIROUT
+		|| (*token)->tkn == REDIROUTAPP)
 	{
 		if (!handle_redir(token, minish, table))
 			return (false);
 	}
-	else if ((*token)->type == HEREDOC)
+	else if ((*token)->tkn == HEREDOC)
 	{
 		if (!handle_heredoc(token, minish, table))
 			return (false);
 		add_token_to_table(table, *token);
 	}
-	else if ((*token)->type == SINGLE_QUOTE)
+	else if ((*token)->tkn == SINGLE_QUOTE)
 		add_token_to_table(table, (*token));
 	return (true);
 }
 
-
-bool	check_valid_pipe(t_lexer *token, t_table *table, t_mini *minish)
+bool	check_valid_pipe(t_tkn_lst *token, t_table *table, t_mini *minish)
 {
 	if (token->next == NULL)
 		return (write_err(minish, 10, NULL), false);
-	else if (token->next->type != STRING)
-		return (write_err(minish, 11, token->next->data), false);
-	else if (token->type == PIPE && !table)
+	else if (token->next->tkn != STRING)
+		return (write_err(minish, 11, token->next->content), false);
+	else if (token->tkn == PIPE && !table)
 		return (write_err(minish, 12, NULL), false);
 	return (true);
 }
 
-bool	handle_pipe(t_lexer *token, t_mini *minish, t_table *table)
+bool	handle_pipe(t_tkn_lst *token, t_mini *minish, t_table *table)
 {
 	t_table	*node;
 	t_table	*current;
@@ -106,26 +103,27 @@ bool	handle_pipe(t_lexer *token, t_mini *minish, t_table *table)
 	return (true);
 }
 
-bool	handle_redir(t_lexer **token, t_mini *minish, t_table **table)
+bool	handle_redir(t_tkn_lst **token, t_mini *minish, t_table **table)
 {
 	if ((*token)->next == NULL)
 		return (write_err(minish, 8, NULL), false);
-	else if ((*token)->next->type != STRING)
-		return (write_err(minish, 9, (*token)->next->data), false);
-	if ((*token)->type == REDIRIN)
+	else if ((*token)->next->tkn != STRING)
+		return (write_err(minish, 9, (*token)->next->content), false);
+	if ((*token)->tkn == REDIRIN)
 	{
 		if (minish->in_redir)
 			free(minish->in_redir);
-		minish->in_redir = ft_strdup((*token)->next->data);
+		minish->in_redir = ft_strdup((*token)->next->content);
 	}
-	else if ((*token)->type == REDIROUT || (*token)->type == REDIROUTAPP)
+	else if ((*token)->tkn == REDIROUT || (*token)->tkn == REDIROUTAPP)
 	{
 		if (minish->out_redir)
-			free(minish->out_redir);
-		minish->out_redir = ft_strdup((*token)->next->data);
+			if (creat_close_file(minish) == -1)
+				return (false);
+		minish->out_redir = ft_strdup((*token)->next->content);
 	}
-	(*token)->next->type = FILENAME;
-	if ((*token)->type == REDIROUTAPP)
+	(*token)->next->tkn = FILENAME;
+	if ((*token)->tkn == REDIROUTAPP)
 		minish->append_mode = true;
 	add_redir_to_table(token, table);
 	return (true);

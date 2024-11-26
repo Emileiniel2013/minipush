@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct_freeing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:14:33 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 16:38:23 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/26 17:15:49 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	free_cmd(t_cmd *cmd)
 	}
 }
 
-void	free_parser(t_mini *minish, t_lexer *lst, t_table *table)
+void	free_parser(t_mini *minish, t_tkn_lst *lst, t_table *table)
 {
 	free_tkn_lst(lst);
 	if (table)

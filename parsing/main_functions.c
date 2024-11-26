@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/23 15:06:03 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/26 17:14:37 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ void	check_dollar(t_dollar_param *param)
 	*(param->last_pos) = *(param->i);
 }
 
-char	*expand_var(t_mini *msh, const char *content, int *i)
+char	*expand_var(t_mini *msh, char *content, int *i)
 {
 	int		start;
 	int		len;

@@ -3,99 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:45:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/23 17:36:41 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/07 16:44:29 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/lexer.h"
 
-void	redirection(t_lexer_params *param)
+bool	ft_isspace(char index)
 {
-	if (param->prompt[*(param->i) + 1] == '>')
-	{
-		*(param->current) = create_tok(">>", APPEND);
-		add_token(param->head, *(param->current));
-		(*(param->i)) += 2;
-	}
+	if (index == ' ')
+		return (true);
 	else
+		return (false);
+}
+
+void	free_tkn_lst(t_tkn_lst *token_lst)
+{
+	t_tkn_lst	*current;
+	t_tkn_lst	*next;
+
+	current = token_lst;
+	while (current)
 	{
-		*(param->current) = create_tok(">", REDIROUT);
-		add_token(param->head, (*(param->current)));
-		(*(param->i))++;
+		next = current->next;
+		if (current->content)
+			free(current->content);
+		free(current);
+		current = next;
 	}
 }
 
-t_lexer	*create_tok(char *data, t_token type)
+char	*ft_strndup(char *s1, size_t len)
 {
-	t_lexer	*token;
+	size_t	j;
+	char	*cpy;
 
-	token = malloc(sizeof(t_lexer));
-	if (token == NULL)
+	j = 0;
+	cpy = malloc(sizeof(char) * (len + 1));
+	if (!cpy)
 		return (NULL);
-	token->data = ft_strdup(data);
-	token->type = type;
-	token->next = NULL;
-	return (token);
-}
-
-void	add_token(t_lexer **tokens, t_lexer *new_token)
-{
-	t_lexer	*temp;
-
-	if (!*tokens)
-		*tokens = new_token;
-	else
+	while (s1[j] && j < len)
 	{
-		temp = *tokens;
-		while (temp->next)
-		{
-			temp = temp->next;
-		}
-		temp->next = new_token;
+		cpy[j] = s1[j];
+		j++;
 	}
+	cpy[j] = '\0';
+	return (cpy);
 }
 
-char	*handle_quote(char *prompt, t_lexer_params *param)
+t_tkn_lst	*create_new_node(char *content, t_tkn token)
 {
-	char	*start;
-	char	*end;
-	char	*string;
+	t_tkn_lst	*new_token;
 
-	start = prompt + 1;
-	end = ft_strchr(start, 34);
-	if (!end)
-		write_err(param->msh, 16, NULL);
-	string = malloc(end - start + 1);
-	if (!string)
+	new_token = malloc(sizeof(t_tkn_lst));
+	if (!new_token)
 		return (NULL);
-	if (prompt && end)
-	{
-		ft_memmove(string, start, end - start);
-		string[end - start] = '\0';
-	}
-	return (string);
-}
-
-char	*handle_single_quote(char *prompt, t_lexer_params *param)
-{
-	char	*start;
-	char	*end;
-	char	*string;
-
-	start = prompt + 1;
-	end = ft_strchr(start, 39);
-	if (!end)
-		write_err(param->msh, 16, NULL);
-	string = malloc(end - start + 1);
-	if (!string)
-		return (NULL);
-	if (prompt && end)
-	{
-		ft_memmove(string, start, end - start);
-		string[end - start] = '\0';
-	}
-	return (string);
+	new_token->content = ft_strdup(content);
+	new_token->tkn = token;
+	new_token->next = NULL;
+	return (new_token);
 }
