@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:09:16 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 17:23:58 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/11 11:33:25 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ void	restore_redirections(t_mini *mini)
 		free(mini->out_redir);
 		mini->out_redir = NULL;
 	}
-	if (open(".temporary_heredoc", O_RDONLY, 0644) > 0)
-		unlink(".temporary_heredoc");
+	if (open(".heredoc_tmp", O_RDONLY, 0644) > 0)
+		unlink(".heredoc_tmp");
 	if (mini->success)
 		mini->exit_code = EXIT_SUCCESS;
 	else

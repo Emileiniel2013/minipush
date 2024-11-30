@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:10:49 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 16:41:01 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:24:27 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,3 @@ void	sigint_handler(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
-
-// void	sigint_handler_child(int sig)
-// {
-// 	(void)sig;
-// 	write(STDOUT_FILENO, "\n", 1);
-// }

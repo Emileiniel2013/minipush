@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:36:41 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/07 19:10:10 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/28 18:19:35 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,7 @@ char	**list2array(t_mini *minish)
 	i = -1;
 	while (cmd != NULL)
 	{
-		i++;
-		arg_arr[i] = ft_creat_execve_arg(cmd->content, i);
+		arg_arr[++i] = ft_strdup(cmd->content);
 		cmd = cmd->next;
 	}
 	return (arg_arr);

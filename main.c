@@ -3,21 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:50:07 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/20 18:30:48 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/11/30 21:29:46 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-// void	leaks(void)
-// {
-// 	system("minishell");
-// }
-
-//atexit(leaks);
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_mini	*minish;
@@ -31,7 +25,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (!line)
 			break ;
 		minishell_parser(line, minish);
-		free(line);
+		ft_free(&line);
 		if (minish->table && (handle_redirections(minish) != -1))
 		{
 			if (!minish->table->rightpipe && check_builtin(minish))

@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:56:58 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/11 12:02:22 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:24:32 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*ft_getcwd(t_mini *minish);
 int		handle_cd_home(t_mini *minish, char *path);
 int		handle_cd_oldpwd(t_mini *minish);
 char	*check_valid_cmd(char **paths, t_mini *minish);
-char	*ft_creat_execve_arg(char *content, int i);
+int		check_dir(char *path, t_mini *minish);
 
 // ENV MANIPULATION
 void	add_new_var_to_arr(char *newvar, t_mini *minish);
@@ -64,7 +64,6 @@ void	restore_redirections(t_mini *minish);
 // SIGNAL HANDLING
 void	handle_signals(void);
 void	sigint_handler(int sig);
-void	sigint_handler_child(int sig);
 
 // HELPER FUNCTIONS
 int		check_existing_env(t_mini *minish, bool *found_env, char *env);
