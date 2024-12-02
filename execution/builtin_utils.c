@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 17:04:18 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/30 21:10:05 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:40:04 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ char	*check_valid_cmd(char **paths, t_mini *minish)
 	return (path);
 }
 
-int		check_dir(char *path, t_mini *minish)
+int	check_dir(char *path, t_mini *minish)
 {
 	if (strcmp(path, "/") == 0)
 	{
