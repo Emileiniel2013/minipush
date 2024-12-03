@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:09:16 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 13:21:48 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/03 18:20:36 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_mini	*init_mini_vars(int argc, char **argv, char **envp)
 	mini->redirfd = STDOUT_FILENO;
 	mini->exit_code = 0;
 	mini->success = true;
+	mini->pipes = 0;
 	return (mini);
 }
 
@@ -88,4 +89,5 @@ void	restore_redirections(t_mini *mini)
 	else
 		mini->success = true;
 	mini->redirfd = STDOUT_FILENO;
+	mini->pipes = 0;
 }

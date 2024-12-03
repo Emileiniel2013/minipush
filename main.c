@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:50:07 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/02 21:03:46 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:51:57 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char *argv[], char *envp[])
 		ft_free(&line);
 		if (minish->table && (handle_redirections(minish) != -1))
 		{
-			if (!minish->table->rightpipe && check_builtin(minish))
+			if (minish->pipes == 0 && check_builtin(minish))
 				executor(minish);
 			else
 				mini_main(minish);

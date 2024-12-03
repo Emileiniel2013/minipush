@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:27:42 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/28 18:28:49 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:15:37 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ typedef struct t_simple_command
 
 typedef struct t_command_table
 {
-	bool						leftpipe;
-	bool						rightpipe;
 	t_cmd						*command;
 	t_cmd						*cmd_head;
 	struct t_command_table		*next;
@@ -81,6 +79,7 @@ typedef struct t_minishell
 	bool	success;
 	bool	append_mode;
 	int		redirfd;
+	int		pipes;
 }		t_mini;
 
 // MAIN FUNCTIONS

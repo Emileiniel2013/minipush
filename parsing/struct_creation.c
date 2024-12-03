@@ -6,13 +6,13 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:16:25 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 18:42:53 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:53:12 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
 
-void	add_token_to_table(t_table **table, t_tkn_lst *token_lst)
+bool	add_token_to_table(t_table **table, t_tkn_lst *token_lst)
 {
 	t_table	*current_node;
 	t_tkn	token;
@@ -22,29 +22,24 @@ void	add_token_to_table(t_table **table, t_tkn_lst *token_lst)
 	if (token == STRING || token == DOUBLE_QUOTE || token == SINGLE_QUOTE)
 	{
 		if (!(*table))
-			create_table(table, false);
+		{
+			*table = malloc(sizeof(t_table));
+			if (!(*table))
+				{
+					write(STDERR_FILENO, "Memory allocation fail!\n", 25);
+					return (false);
+				}
+		}
 		current_node = *table;
 		while (current_node->next)
 			current_node = current_node->next;
-		create_cmd_table(&current_node, token_lst->content);
+		if (!create_cmd_table(&current_node, token_lst->content))
+			return (false);
 	}
+	return (true);
 }
 
-void	create_table(t_table **table, bool leftpipe)
-{
-	*table = malloc(sizeof(t_table));
-	if (!(*table))
-		return ;
-	if (leftpipe == true)
-		(*table)->leftpipe = true;
-	else
-		(*table)->leftpipe = false;
-	(*table)->rightpipe = false;
-	(*table)->next = NULL;
-	(*table)->command = NULL;
-}
-
-void	create_cmd_table(t_table **table, char *content)
+bool	create_cmd_table(t_table **table, char *content)
 {
 	t_cmd	*new_node;
 	t_cmd	*current_node;
@@ -53,7 +48,7 @@ void	create_cmd_table(t_table **table, char *content)
 	current_node = NULL;
 	new_node = malloc(sizeof(t_cmd));
 	if (!new_node)
-		return ;
+		return (write(STDERR_FILENO, "Memory allocation fail!\n", 25), false);
 	new_node->content = ft_strdup(content);
 	new_node->next = NULL;
 	if (!(*table)->command)
@@ -68,6 +63,7 @@ void	create_cmd_table(t_table **table, char *content)
 			current_node = current_node->next;
 		current_node->next = new_node;
 	}
+	return (true);
 }
 
 void	add_redir_to_table(t_tkn_lst **token, t_table **table)
@@ -79,7 +75,7 @@ void	add_redir_to_table(t_tkn_lst **token, t_table **table)
 		|| (*token)->tkn == SINGLE_QUOTE)
 	{
 		if (!(*table))
-			create_table(table, false);
+			*table = malloc(sizeof(t_table));
 		current_node = *table;
 		while (current_node->next)
 			current_node = current_node->next;

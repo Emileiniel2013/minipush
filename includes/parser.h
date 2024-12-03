@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:32:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 18:22:22 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/12/03 19:47:47 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,8 @@ char	**copy_env(char **envp);
 int		creat_close_file(t_mini *minish);
 
 // STRUCT CREATION
-void	add_token_to_table(t_table **table, t_tkn_lst *token_lst);
-void	create_table(t_table **table, bool leftpipe);
-void	create_cmd_table(t_table **table, char *content);
+bool	add_token_to_table(t_table **table, t_tkn_lst *token_lst);
+bool	create_cmd_table(t_table **table, char *content);
 
 // FREEING 
 void	free_table(t_mini *minish);

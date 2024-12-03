@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 16:16:12 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 13:28:31 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:21:38 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,26 +71,3 @@ char	**copy_env(char **envp)
 	}
 	return (cpy);
 }
-// void	append_remainder(char **expanded_string, char **content, int pos)
-// {
-// 	char	*temp;
-
-// 	temp = ft_strdup(*expanded_string);
-// 	free(*expanded_string);
-// 	*expanded_string = ft_strjoin(temp, (*content) + pos);
-// 	free(temp);
-// 	temp = NULL;
-// }
-
-// void	replace_varname_wtih_var(char **expanded_string, char **env)
-// {
-// 	char	*temp;
-
-// 	temp = ft_strdup(*expanded_string);
-// 	free(*expanded_string);
-// 	*expanded_string = ft_strjoin(temp, *env);
-// 	free(temp);
-// 	free(*env);
-// 	*env = NULL;
-// 	temp = NULL;
-// }

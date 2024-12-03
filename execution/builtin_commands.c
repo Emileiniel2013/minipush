@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:24:36 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/07 17:51:38 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:47:49 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	handle_export(t_mini *minish)
 	newvar = NULL;
 	minish->table->command = minish->table->command->next;
 	if (!minish->table->command)
-		return (handle_env(minish));
+		return (handle_env_export(minish));
 	if (ft_strchr(minish->table->command->content, '=') == NULL)
 		newvar = ft_check_var_lst(minish, minish->table->command->content);
 	else
@@ -131,4 +131,18 @@ void	handle_export(t_mini *minish)
 	}
 	if (minish->table->command->next != NULL)
 		handle_export(minish);
+}
+
+void	handle_env_export(t_mini *minish)
+{
+	int	i;
+
+	i = 0;
+	while (minish->env[i] != NULL)
+	{
+		write(minish->redirfd, "declare -x ", 11);
+		write(minish->redirfd, minish->env[i], ft_strlen(minish->env[i]));
+		write(minish->redirfd, "\n", 1);
+		i++;
+	}
 }

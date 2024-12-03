@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 11:41:14 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/30 21:24:01 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:14:45 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,54 +14,60 @@
 
 void	mini_main(t_mini *minish)
 {
-	int	pipefd[2];
-	int	prevpipefd;
-	int	pid;
+	int	pipefd[2 * minish->pipes];
+	int	pid[minish->pipes + 1];
+    int i;
 
-	prevpipefd = -1;
-	while (minish->table)
-	{
-		if (minish->table->rightpipe)
-			pipe(pipefd);
+	i = 0;
+    while(i < minish->pipes)
+    {
+        pipe(pipefd + i * 2);
+        i++;
+    }
+    i = 0;
+    while (i < minish->pipes + 1)
+    {
 		handle_shlvl(minish, '+');
-		pid = fork();
-		if (pid == 0)
-			child_execution(minish, prevpipefd, pipefd);
-		parent_execution(minish, pid);
-		if (minish->table->leftpipe)
-			close(prevpipefd);
-		if (minish->table->rightpipe)
-			prevpipefd = pipefd[0];
-		if (minish->table->leftpipe || minish->table->rightpipe)
-			close(pipefd[1]);
+        pid[i] = fork();
+        if (pid[i] == 0 )
+            child_execution(minish, pipefd, i);
 		minish->table = minish->table->next;
-	}
-	if (prevpipefd != -1)
-		close(pipefd[0]);
+		i++;
+    }
+    i = 0;
+    while (i < 2 * (minish->pipes))
+    {
+        close(pipefd[i]);
+        i++;
+    }
+	parent_execution(minish, pid);
 }
 
-void	child_execution(t_mini *minish, int prevpipefd, int *pipefd)
+void	child_execution(t_mini *minish, int *pipefd, int i)
 {
+	int	j;
+
+	j = 0;
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
-	if (minish->table->leftpipe)
+	if (i == 0 && minish->infd != STDIN_FILENO)
 	{
-		dup2(prevpipefd, STDIN_FILENO);
-		close(prevpipefd);
-	}
-	else if (!minish->table->leftpipe && minish->in_redir)
 		dup2(minish->infd, STDIN_FILENO);
-	if (minish->table->rightpipe)
-	{
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[0]);
-		close(pipefd[1]);
-		minish->redirfd = STDOUT_FILENO;
+		close(minish->infd);
 	}
-	else if (!minish->table->rightpipe && minish->out_redir)
+	else if (i > 0)
+		dup2(pipefd[(i - 1) * 2], STDIN_FILENO);
+	if (i == minish->pipes && minish->outfd != STDOUT_FILENO)
 	{
 		dup2(minish->outfd, STDOUT_FILENO);
-		minish->redirfd = minish->outfd;
+		close(minish->outfd);
+	}
+	else if (i < minish->pipes)
+		dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
+	while (j < 2 * minish->pipes)
+	{
+		close(pipefd[j]);
+		j++;	
 	}
 	executor(minish);
 	exit_minish(minish);
@@ -96,15 +102,21 @@ void	executor(t_mini *minish)
 	}
 }
 
-void	parent_execution(t_mini *minish, int pid)
+void	parent_execution(t_mini *minish, int *pid)
 {
 	int	status;
+	int	i;
 
+	i = 0;
 	status = 0;
 	signal(SIGINT, SIG_IGN);
-	waitpid(pid, &status, 0);
+	while(i < minish->pipes + 1)
+    {
+        waitpid(pid[i], &status, 0);
+		handle_shlvl(minish, '-');
+		i++;
+    }
 	signal(SIGINT, sigint_handler);
-	handle_shlvl(minish, '-');
 	if (WIFEXITED(status))
 	{
 		if (WEXITSTATUS(status) != 0)
