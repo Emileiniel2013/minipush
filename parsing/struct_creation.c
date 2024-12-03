@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct_creation.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:16:25 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 19:53:12 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:28:02 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,13 @@ bool	add_token_to_table(t_table **table, t_tkn_lst *token_lst)
 		{
 			*table = malloc(sizeof(t_table));
 			if (!(*table))
-				{
-					write(STDERR_FILENO, "Memory allocation fail!\n", 25);
-					return (false);
-				}
+			{
+				write(STDERR_FILENO, "Memory allocation fail!\n", 25);
+				return (false);
+			}
+			(*table)->command = NULL;
+			(*table)->cmd_head = NULL;
+			(*table)->next = NULL;
 		}
 		current_node = *table;
 		while (current_node->next)
