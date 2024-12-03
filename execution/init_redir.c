@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:09:16 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/11 11:33:25 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:21:48 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,11 @@
 t_mini	*init_mini_vars(int argc, char **argv, char **envp)
 {
 	t_mini	*mini;
-	char	**envp_cpy;
 
 	(void)argc;
 	(void)argv;
 	mini = malloc(sizeof(t_mini));
-	envp_cpy = copy_env(envp);
-	mini->env = envp_cpy;
+	mini->env = copy_env(envp);
 	mini->var_lst = NULL;
 	mini->table = NULL;
 	mini->table_head = NULL;
