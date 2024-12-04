@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:05:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/07 17:08:19 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:22:28 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ void	swap_vars(char **newenv)
 
 bool	ft_isnumber(char *content)
 {
+	if (*content && (*content == '+' || *content == '-'))
+		content++;
 	while (*content)
 	{
 		if (*content >= '0' && *content <= '9')

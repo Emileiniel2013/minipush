@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:44:09 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/30 21:10:19 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:55:46 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,11 @@ void	write_arg_err(int code, char *arg)
 		write(STDERR_FILENO, "Minishell: ", 11);
 		write(STDERR_FILENO, arg, ft_strlen(arg));
 		write(STDERR_FILENO, ": command not found\n", 21);
+	}
+	else if (code == 69)
+	{
+		write(STDERR_FILENO, "Minishell: export: `", 20);
+		write(STDERR_FILENO, arg, ft_strlen(arg));
+		write(STDERR_FILENO, "': not a valid identifier\n", 27);
 	}
 }

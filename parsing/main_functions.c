@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:13:00 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 19:20:58 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:49:57 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,11 @@ bool	exp_env_vars(char **content, t_mini *msh)
 {
 	char	*exp_string;
 
+	exp_string = NULL;
 	while (1)
 	{
+		if (ft_strcmp(*content, "$") == 0)
+			return (true);
 		exp_string = handle_content(content, msh);
 		if (ft_strcmp(*content, exp_string) == 0)
 		{
@@ -46,7 +49,7 @@ char	*handle_content(char **content, t_mini *msh)
 	param.msh = msh;
 	while ((*content)[i])
 	{
-		if ((*content)[i] == '$')
+		if ((*content)[i] == '$' && (*content)[i + 1] != ' ')
 			check_dollar(&param);
 		else
 			i++;

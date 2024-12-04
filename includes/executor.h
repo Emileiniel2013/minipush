@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:56:58 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 19:15:07 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:52:56 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	handle_unset(t_mini *minish);
 void	handle_exit(t_mini *minish);
 void	check_path(t_mini *minish);
 bool	check_builtin(t_mini *minish);
-void	execute_path(t_mini *minish, char *path);
+void	execute_path(t_mini *minish, char **path);
 void	handle_env_export(t_mini *minish);
 
 // BUILTINS UTILS
@@ -72,6 +72,7 @@ int		check_existing_var(char *newvar, t_mini *minish);
 char	*check_append_mode(char *newvar, int i, bool *join);
 char	**list2array(t_mini *minish);
 bool	check_nl(char *content);
+bool	check_valid_varname(char *content, t_mini *minish);
 
 // CLEANUP
 void	free_arr(char **arr);
