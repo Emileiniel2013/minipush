@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 18:13:43 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:39:19 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ char	*get_next_token(char *line, int *quote_type, t_mini *mini)
 	else
 	{
 		start = index;
-		while (line[index] && !ft_isspace(line[index]) && line[index] != '"' && line[index] != '\'')
+		while (line[index] && !ft_isspace(line[index]) && line[index] != '"'
+			&& line[index] != '\'')
 			index++;
 		if (index > start)
 			token = ft_strndup(line + start, index - start);

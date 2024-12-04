@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:24:36 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/04 19:53:05 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:40:59 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,26 +133,4 @@ void	handle_export(t_mini *minish)
 	}
 	if (minish->table->command->next != NULL)
 		handle_export(minish);
-}
-
-void	handle_env_export(t_mini *minish)
-{
-	int	i;
-
-	i = 0;
-	while (minish->env && minish->env[i])
-	{
-		write(minish->redirfd, "declare -x ", 11);
-		write(minish->redirfd, minish->env[i], ft_strlen(minish->env[i]));
-		write(minish->redirfd, "\n", 1);
-		i++;
-	}
-	i = 0;
-	while (minish->var_lst && minish->var_lst[i])
-	{
-		write(minish->redirfd, "declare -x ", 11);
-		write(minish->redirfd, minish->var_lst[i], ft_strlen(minish->var_lst[i]));
-		write(minish->redirfd, "\n", 1);
-		i++;
-	}
 }

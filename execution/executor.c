@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 11:41:14 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/04 20:53:23 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:59:11 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,54 @@
 
 void	mini_main(t_mini *minish)
 {
-	int	pipefd[2 * minish->pipes];
-	int	pid[minish->pipes + 1];
-    int i;
+	int	*pipefd;
+	int	*pid;
 
-	i = 0;
-    while(i < minish->pipes)
-    {
-        pipe(pipefd + i * 2);
-        i++;
-    }
-    i = 0;
-    while (i < minish->pipes + 1)
-    {
-		handle_shlvl(minish, '+');
-        pid[i] = fork();
-        if (pid[i] == 0 )
-            child_execution(minish, pipefd, i);
-		minish->table = minish->table->next;
-		i++;
-    }
-    i = 0;
-    while (i < 2 * (minish->pipes))
-    {
-        close(pipefd[i]);
-        i++;
-    }
+	pipefd = (int *)malloc(2 * minish->pipes * sizeof(int));
+	pid = (int *)malloc((minish->pipes + 1) * sizeof(int));
+	if (!pipefd || !pid)
+	{
+		free(pipefd);
+		free(pid);
+		return ;
+	}
+	create_pipes(pipefd, minish->pipes);
+	fork_processes(minish, pipefd, pid);
+	close_pipes(pipefd, minish->pipes);
 	parent_execution(minish, pid);
+	free(pipefd);
+	free(pid);
 }
+// void	mini_main(t_mini *minish)
+// {
+// 	int	pipefd[2 * minish->pipes];
+// 	int	pid[minish->pipes + 1];
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < minish->pipes)
+// 	{
+// 		pipe(pipefd + i * 2);
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (i < minish->pipes + 1)
+// 	{
+// 		handle_shlvl(minish, '+');
+// 		pid[i] = fork();
+// 		if (pid[i] == 0)
+// 			child_execution(minish, pipefd, i);
+// 		minish->table = minish->table->next;
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (i < 2 * (minish->pipes))
+// 	{
+// 		close(pipefd[i]);
+// 		i++;
+// 	}
+// 	parent_execution(minish, pid);
+// }
 
 void	child_execution(t_mini *minish, int *pipefd, int i)
 {
@@ -67,7 +87,7 @@ void	child_execution(t_mini *minish, int *pipefd, int i)
 	while (j < 2 * minish->pipes)
 	{
 		close(pipefd[j]);
-		j++;	
+		j++;
 	}
 	executor(minish);
 	exit_minish(minish);
@@ -91,7 +111,7 @@ void	executor(t_mini *minish)
 			handle_unset(minish);
 		else if (ft_strcmp(minish->table->command->content, "exit") == 0)
 			handle_exit(minish);
-		else if ((ft_strncmp (minish->table->command->content, "./", 2)) == 0)
+		else if ((ft_strncmp(minish->table->command->content, "./", 2)) == 0)
 			execute_file(minish);
 		else if (ft_strchr(minish->table->command->content + 1, '=') != NULL)
 			add_var_to_list(minish);
@@ -110,12 +130,12 @@ void	parent_execution(t_mini *minish, int *pid)
 	i = 0;
 	status = 0;
 	signal(SIGINT, SIG_IGN);
-	while(i < minish->pipes + 1)
-    {
-        waitpid(pid[i], &status, 0);
+	while (i < minish->pipes + 1)
+	{
+		waitpid(pid[i], &status, 0);
 		handle_shlvl(minish, '-');
 		i++;
-    }
+	}
 	signal(SIGINT, sigint_handler);
 	if (WIFEXITED(status))
 	{

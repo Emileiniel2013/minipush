@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 17:16:25 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 20:28:02 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/12/04 21:42:44 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,10 @@
 bool	add_token_to_table(t_table **table, t_tkn_lst *token_lst)
 {
 	t_table	*current_node;
-	t_tkn	token;
 
 	current_node = NULL;
-	token = token_lst->tkn;
-	if (token == STRING || token == DOUBLE_QUOTE || token == SINGLE_QUOTE)
+	if (token_lst->tkn == STRING || token_lst->tkn == DOUBLE_QUOTE
+		|| token_lst->tkn == SINGLE_QUOTE)
 	{
 		if (!(*table))
 		{

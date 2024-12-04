@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_redir.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:09:16 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 18:20:36 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:41:26 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,50 @@ void	restore_redirections(t_mini *mini)
 		mini->success = true;
 	mini->redirfd = STDOUT_FILENO;
 	mini->pipes = 0;
+}
+
+bool	check_valid_varname(char *content, t_mini *minish)
+{
+	int		i;
+	char	*varname;
+
+	varname = NULL;
+	i = 0;
+	if (strcmp(content, "=") == 0)
+		return (write_err(minish, 69, content), false);
+	while (content[i] && content[i] != '=')
+		i++;
+	varname = ft_strndup(content, i);
+	if (ft_isalpha(varname[0]) != 1 && varname[0] != '_')
+		return (write_err(minish, 69, varname), ft_free(&varname), false);
+	i = 0;
+	while (varname[++i])
+	{
+		if (ft_isalnum(varname[i]) != 1 && varname[i] != '_')
+			return (write_err(minish, 69, varname), ft_free(&varname), false);
+	}
+	return (ft_free(&varname), true);
+}
+
+void	handle_env_export(t_mini *minish)
+{
+	int	i;
+
+	i = 0;
+	while (minish->env && minish->env[i])
+	{
+		write(minish->redirfd, "declare -x ", 11);
+		write(minish->redirfd, minish->env[i], ft_strlen(minish->env[i]));
+		write(minish->redirfd, "\n", 1);
+		i++;
+	}
+	i = 0;
+	while (minish->var_lst && minish->var_lst[i])
+	{
+		write(minish->redirfd, "declare -x ", 11);
+		write(minish->redirfd, minish->var_lst[i],
+			ft_strlen(minish->var_lst[i]));
+		write(minish->redirfd, "\n", 1);
+		i++;
+	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:56:58 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/04 19:52:56 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:53:25 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 
 // EXECUTOR
 void	mini_main(t_mini *minish);
+void	create_pipes(int *pipefd, int num_pipes);
+void	fork_processes(t_mini *minish, int *pipefd, int *pid);
+void	close_pipes(int *pipefd, int num_pipes);
 void	child_execution(t_mini *minish, int *pipefd, int i);
 void	executor(t_mini *minish);
 void	parent_execution(t_mini *minish, int *pid);

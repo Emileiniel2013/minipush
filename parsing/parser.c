@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/04 20:39:15 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:40:22 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,9 @@ bool	handle_redir(t_tkn_lst **token, t_mini *minish, t_table **table)
 {
 	if ((*token)->next == NULL)
 		return (write_err(minish, 8, NULL), false);
-	else if ((*token)->next->tkn != STRING && (*token)->next->tkn != DOUBLE_QUOTE && (*token)->next->tkn != SINGLE_QUOTE)
+	else if ((*token)->next->tkn != STRING
+		&& (*token)->next->tkn != DOUBLE_QUOTE
+		&& (*token)->next->tkn != SINGLE_QUOTE)
 		return (write_err(minish, 9, (*token)->next->content), false);
 	if ((*token)->tkn == REDIRIN)
 	{

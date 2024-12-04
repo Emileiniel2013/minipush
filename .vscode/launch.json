@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/tndreka/Desktop/emil-taulan-mini",
+      "program": "/Users/tndreka/Desktop/emil-taulan-mini/build/Debug/outDebug"
+    }
+  ]
+}

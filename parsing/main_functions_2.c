@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_functions_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:00:28 by tndreka           #+#    #+#             */
-/*   Updated: 2024/12/03 12:29:35 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:47:09 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,59 @@
 bool	handle_heredoc(t_tkn_lst **token, t_mini *msh, t_table **table)
 {
 	char	*separator;
-	char	*line;
 	int		fd;
 
-	line = NULL;
 	fd = -1;
 	(void)table;
-	if(!check_valid_heredoc(token, msh, &separator))
+	if (!check_valid_heredoc(token, msh, &separator))
 		return (false);
 	open_the_fd(&fd, msh, separator);
-	while (true)
+	if (!process_heredoc_input(fd, separator))
 	{
-		line = readline("heredoc> ");
-		if (!line)
-		{
-			ft_free(&separator);
-			unlink(".heredoc_tmp");
-			return (false);
-		}
-		if (ft_strcmp(line, separator) == 0)
-		{
-			free(line);
-			break ;
-		}
-		write_line(fd, line);
-		free(line);
+		ft_free(&separator);
+		unlink(".heredoc_tmp");
+		return (false);
 	}
 	msh->in_redir = ft_strdup(".heredoc_tmp");
 	ft_free(&separator);
 	close(fd);
 	return (true);
 }
+
+// bool	handle_heredoc(t_tkn_lst **token, t_mini *msh, t_table **table)
+// {
+// 	char	*separator;
+// 	char	*line;
+// 	int		fd;
+
+// 	line = NULL;
+// 	fd = -1;
+// 	(void)table;
+// 	if (!check_valid_heredoc(token, msh, &separator))
+// 		return (false);
+// 	open_the_fd(&fd, msh, separator);
+// 	while (true)
+// 	{
+// 		line = readline("heredoc> ");
+// 		if (!line)
+// 		{
+// 			ft_free(&separator);
+// 			unlink(".heredoc_tmp");
+// 			return (false);
+// 		}
+// 		if (ft_strcmp(line, separator) == 0)
+// 		{
+// 			free(line);
+// 			break ;
+// 		}
+// 		write_line(fd, line);
+// 		free(line);
+// 	}
+// 	msh->in_redir = ft_strdup(".heredoc_tmp");
+// 	ft_free(&separator);
+// 	close(fd);
+// 	return (true);
+// }
 
 void	write_line(int fd, char *line)
 {

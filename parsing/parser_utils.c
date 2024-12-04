@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 16:16:12 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 19:21:38 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:46:53 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,24 @@ char	**copy_env(char **envp)
 		j++;
 	}
 	return (cpy);
+}
+
+bool	process_heredoc_input(int fd, char *separator)
+{
+	char	*line;
+
+	while (true)
+	{
+		line = readline("heredoc> ");
+		if (!line)
+			return (false);
+		if (ft_strcmp(line, separator) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write_line(fd, line);
+		free(line);
+	}
+	return (true);
 }

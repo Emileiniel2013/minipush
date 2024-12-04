@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:32:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/03 19:47:47 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:47:33 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ bool	handle_heredoc(t_tkn_lst **token, t_mini *msh, t_table **table);
 void	write_line(int fd, char *line);
 bool	check_valid_heredoc(t_tkn_lst **token, t_mini *msh, char **separator);
 bool	open_the_fd(int *fd, t_mini *msh, char *separator);
+bool	process_heredoc_input(int fd, char *separator);
 
 // PARSING UTILS
 int		ft_strcmp(const char *s1, char *s2);

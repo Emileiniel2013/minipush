@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 15:36:41 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/04 20:25:47 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:37:31 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,27 +113,4 @@ bool	check_nl(char *content)
 			return (false);
 	}
 	return (true);
-}
-
-bool	check_valid_varname(char *content, t_mini *minish)
-{
-	int		i;
-	char	*varname;
-
-	varname = NULL;
-	i = 0;
-	if (strcmp(content, "=") == 0)
-		return(write_err(minish, 69, content), false);
-	while (content[i] && content[i] != '=')
-		i++;
-	varname = ft_strndup(content, i);
-	if (ft_isalpha(varname[0]) != 1 && varname[0] != '_')
-		return(write_err(minish, 69, varname), ft_free(&varname), false);
-	i = 0;
-	while (varname[++i])
-	{
-		if (ft_isalnum(varname[i]) != 1 && varname[i] != '_')
-			return(write_err(minish, 69, varname), ft_free(&varname), false);
-	}
-	return (ft_free(&varname), true);
 }
