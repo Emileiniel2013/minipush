@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 10:56:58 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/30 21:24:32 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:53:25 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,12 @@
 
 // EXECUTOR
 void	mini_main(t_mini *minish);
-void	child_execution(t_mini *minish, int prevpipefd, int *pipefd);
+void	create_pipes(int *pipefd, int num_pipes);
+void	fork_processes(t_mini *minish, int *pipefd, int *pid);
+void	close_pipes(int *pipefd, int num_pipes);
+void	child_execution(t_mini *minish, int *pipefd, int i);
 void	executor(t_mini *minish);
-void	parent_execution(t_mini *minish, int pid);
+void	parent_execution(t_mini *minish, int *pid);
 void	execute_file(t_mini *minish);
 
 // BUILTINS
@@ -35,7 +38,8 @@ void	handle_unset(t_mini *minish);
 void	handle_exit(t_mini *minish);
 void	check_path(t_mini *minish);
 bool	check_builtin(t_mini *minish);
-void	execute_path(t_mini *minish, char *path);
+void	execute_path(t_mini *minish, char **path);
+void	handle_env_export(t_mini *minish);
 
 // BUILTINS UTILS
 char	*ft_getcwd(t_mini *minish);
@@ -71,6 +75,7 @@ int		check_existing_var(char *newvar, t_mini *minish);
 char	*check_append_mode(char *newvar, int i, bool *join);
 char	**list2array(t_mini *minish);
 bool	check_nl(char *content);
+bool	check_valid_varname(char *content, t_mini *minish);
 
 // CLEANUP
 void	free_arr(char **arr);

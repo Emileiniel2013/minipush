@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:24:36 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/07 17:51:38 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:40:59 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,9 @@ void	handle_export(t_mini *minish)
 	newvar = NULL;
 	minish->table->command = minish->table->command->next;
 	if (!minish->table->command)
-		return (handle_env(minish));
+		return (handle_env_export(minish));
+	if (!check_valid_varname(minish->table->command->content, minish))
+		return ;
 	if (ft_strchr(minish->table->command->content, '=') == NULL)
 		newvar = ft_check_var_lst(minish, minish->table->command->content);
 	else

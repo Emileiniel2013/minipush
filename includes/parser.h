@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 13:32:53 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 18:22:22 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/12/04 21:47:33 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ bool	handle_heredoc(t_tkn_lst **token, t_mini *msh, t_table **table);
 void	write_line(int fd, char *line);
 bool	check_valid_heredoc(t_tkn_lst **token, t_mini *msh, char **separator);
 bool	open_the_fd(int *fd, t_mini *msh, char *separator);
+bool	process_heredoc_input(int fd, char *separator);
 
 // PARSING UTILS
 int		ft_strcmp(const char *s1, char *s2);
@@ -55,9 +56,8 @@ char	**copy_env(char **envp);
 int		creat_close_file(t_mini *minish);
 
 // STRUCT CREATION
-void	add_token_to_table(t_table **table, t_tkn_lst *token_lst);
-void	create_table(t_table **table, bool leftpipe);
-void	create_cmd_table(t_table **table, char *content);
+bool	add_token_to_table(t_table **table, t_tkn_lst *token_lst);
+bool	create_cmd_table(t_table **table, char *content);
 
 // FREEING 
 void	free_table(t_mini *minish);

@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 16:16:12 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/19 14:32:22 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/12/04 21:46:53 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,37 +65,29 @@ char	**copy_env(char **envp)
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i], "OLDPWD=", 7) != 0)
-		{
-			cpy[j] = ft_strdup(envp[i]);
-			i++;
-			j++;
-		}
-		else
-			i++;
+		cpy[j] = ft_strdup(envp[i]);
+		i++;
+		j++;
 	}
 	return (cpy);
 }
-// void	append_remainder(char **expanded_string, char **content, int pos)
-// {
-// 	char	*temp;
 
-// 	temp = ft_strdup(*expanded_string);
-// 	free(*expanded_string);
-// 	*expanded_string = ft_strjoin(temp, (*content) + pos);
-// 	free(temp);
-// 	temp = NULL;
-// }
+bool	process_heredoc_input(int fd, char *separator)
+{
+	char	*line;
 
-// void	replace_varname_wtih_var(char **expanded_string, char **env)
-// {
-// 	char	*temp;
-
-// 	temp = ft_strdup(*expanded_string);
-// 	free(*expanded_string);
-// 	*expanded_string = ft_strjoin(temp, *env);
-// 	free(temp);
-// 	free(*env);
-// 	*env = NULL;
-// 	temp = NULL;
-// }
+	while (true)
+	{
+		line = readline("heredoc> ");
+		if (!line)
+			return (false);
+		if (ft_strcmp(line, separator) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write_line(fd, line);
+		free(line);
+	}
+	return (true);
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 14:43:06 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/26 18:57:58 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:40:22 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,15 @@ void	minishell_parser(char *prompt, t_mini *msh)
 
 	table = NULL;
 	tkn_lst = process_input(prompt, msh);
-	lst_head = tkn_lst;
 	if (!tkn_lst)
 		return ;
+	lst_head = tkn_lst;
 	while (tkn_lst)
 	{
 		if (!pass_token_to_table(&tkn_lst, msh, &table))
 		{
 			free_parser(msh, lst_head, table);
+			msh->pipes = 0;
 			return ;
 		}
 		tkn_lst = tkn_lst->next;
@@ -60,7 +61,8 @@ bool	pass_token_to_table(t_tkn_lst **token, t_mini *minish, t_table **table)
 		if (!handle_heredoc(token, minish, table))
 			return (false);
 	}
-	add_token_to_table(table, *token);
+	if (!add_token_to_table(table, *token))
+		return (false);
 	return (true);
 }
 
@@ -87,18 +89,14 @@ bool	handle_pipe(t_tkn_lst *token, t_mini *minish, t_table *table)
 		current = current->next;
 	node = malloc(sizeof(t_table));
 	if (!node)
-		return (write_err(minish, 6, NULL), false);
-	node->leftpipe = true;
-	node->rightpipe = false;
+		return (write(STDERR_FILENO, "Memory allocation fail!\n", 25), false);
 	node->command = NULL;
 	node->next = NULL;
 	if (current)
-	{
-		current->rightpipe = true;
 		current->next = node;
-	}
 	else
 		table = node;
+	minish->pipes++;
 	return (true);
 }
 
@@ -106,7 +104,9 @@ bool	handle_redir(t_tkn_lst **token, t_mini *minish, t_table **table)
 {
 	if ((*token)->next == NULL)
 		return (write_err(minish, 8, NULL), false);
-	else if ((*token)->next->tkn != STRING)
+	else if ((*token)->next->tkn != STRING
+		&& (*token)->next->tkn != DOUBLE_QUOTE
+		&& (*token)->next->tkn != SINGLE_QUOTE)
 		return (write_err(minish, 9, (*token)->next->content), false);
 	if ((*token)->tkn == REDIRIN)
 	{

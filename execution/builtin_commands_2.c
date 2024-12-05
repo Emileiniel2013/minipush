@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 18:07:04 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/30 21:12:55 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:29:12 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	check_path(t_mini *minish)
 	if (check_dir(path, minish) == -1)
 		return (ft_free(&path));
 	if (access(path, X_OK) == 0)
-		execute_path(minish, path);
+		execute_path(minish, &path);
 	else
 	{
 		ft_free(&path);
@@ -91,7 +91,7 @@ void	check_path(t_mini *minish)
 		path = check_valid_cmd(paths, minish);
 		free_arr(paths);
 		if (path)
-			execute_path(minish, path);
+			execute_path(minish, &path);
 		else
 			write_err(minish, 23, minish->table->command->content);
 	}
@@ -126,7 +126,7 @@ bool	check_builtin(t_mini *minish)
 	return (false);
 }
 
-void	execute_path(t_mini *minish, char *path)
+void	execute_path(t_mini *minish, char **path)
 {
 	char	**paths;
 	char	**env;
@@ -134,5 +134,14 @@ void	execute_path(t_mini *minish, char *path)
 	env = minish->env;
 	paths = list2array(minish);
 	free_minish(minish, true);
-	execve(path, paths, env);
+	if (execve(*path, paths, env) == -1)
+	{
+		free_arr(paths);
+		free_arr(env);
+		write(STDERR_FILENO, "Minishell: ", 11);
+		write(STDERR_FILENO, *path, ft_strlen(*path));
+		write(STDERR_FILENO, ": command not found\n", 21);
+		free(*path);
+		exit(41);
+	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 11:41:14 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/30 21:24:01 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:08:26 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,55 +14,48 @@
 
 void	mini_main(t_mini *minish)
 {
-	int	pipefd[2];
-	int	prevpipefd;
-	int	pid;
+	int	*pipefd;
+	int	*pid;
 
-	prevpipefd = -1;
-	while (minish->table)
+	pipefd = (int *)malloc(2 * minish->pipes * sizeof(int));
+	pid = (int *)malloc((minish->pipes + 1) * sizeof(int));
+	if (!pipefd || !pid)
 	{
-		if (minish->table->rightpipe)
-			pipe(pipefd);
-		handle_shlvl(minish, '+');
-		pid = fork();
-		if (pid == 0)
-			child_execution(minish, prevpipefd, pipefd);
-		parent_execution(minish, pid);
-		if (minish->table->leftpipe)
-			close(prevpipefd);
-		if (minish->table->rightpipe)
-			prevpipefd = pipefd[0];
-		if (minish->table->leftpipe || minish->table->rightpipe)
-			close(pipefd[1]);
-		minish->table = minish->table->next;
+		free(pipefd);
+		free(pid);
+		return ;
 	}
-	if (prevpipefd != -1)
-		close(pipefd[0]);
+	create_pipes(pipefd, minish->pipes);
+	fork_processes(minish, pipefd, pid);
+	close_pipes(pipefd, minish->pipes);
+	parent_execution(minish, pid);
+	free(pipefd);
+	free(pid);
 }
 
-void	child_execution(t_mini *minish, int prevpipefd, int *pipefd)
+void	child_execution(t_mini *minish, int *pipefd, int i)
 {
+	int	j;
+
+	j = -1;
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
-	if (minish->table->leftpipe)
+	if (i == 0 && minish->infd != STDIN_FILENO)
 	{
-		dup2(prevpipefd, STDIN_FILENO);
-		close(prevpipefd);
-	}
-	else if (!minish->table->leftpipe && minish->in_redir)
 		dup2(minish->infd, STDIN_FILENO);
-	if (minish->table->rightpipe)
-	{
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[0]);
-		close(pipefd[1]);
-		minish->redirfd = STDOUT_FILENO;
+		close(minish->infd);
 	}
-	else if (!minish->table->rightpipe && minish->out_redir)
+	else if (i > 0)
+		dup2(pipefd[(i - 1) * 2], STDIN_FILENO);
+	if (i == minish->pipes && minish->outfd != STDOUT_FILENO)
 	{
 		dup2(minish->outfd, STDOUT_FILENO);
-		minish->redirfd = minish->outfd;
+		close(minish->outfd);
 	}
+	else if (i < minish->pipes)
+		dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
+	while (++j < 2 * minish->pipes)
+		close(pipefd[j]);
 	executor(minish);
 	exit_minish(minish);
 }
@@ -85,7 +78,7 @@ void	executor(t_mini *minish)
 			handle_unset(minish);
 		else if (ft_strcmp(minish->table->command->content, "exit") == 0)
 			handle_exit(minish);
-		else if ((ft_strncmp (minish->table->command->content, "./", 2)) == 0)
+		else if ((ft_strncmp(minish->table->command->content, "./", 2)) == 0)
 			execute_file(minish);
 		else if (ft_strchr(minish->table->command->content + 1, '=') != NULL)
 			add_var_to_list(minish);
@@ -96,15 +89,21 @@ void	executor(t_mini *minish)
 	}
 }
 
-void	parent_execution(t_mini *minish, int pid)
+void	parent_execution(t_mini *minish, int *pid)
 {
 	int	status;
+	int	i;
 
+	i = 0;
 	status = 0;
 	signal(SIGINT, SIG_IGN);
-	waitpid(pid, &status, 0);
+	while (i < minish->pipes + 1)
+	{
+		waitpid(pid[i], &status, 0);
+		handle_shlvl(minish, '-');
+		i++;
+	}
 	signal(SIGINT, sigint_handler);
-	handle_shlvl(minish, '-');
 	if (WIFEXITED(status))
 	{
 		if (WEXITSTATUS(status) != 0)
@@ -129,7 +128,7 @@ void	execute_file(t_mini *minish)
 	path = ft_strjoin(filename, minish->table->command->content + 1);
 	ft_free(&filename);
 	if (access(path, X_OK) == 0)
-		execute_path(minish, path);
+		execute_path(minish, &path);
 	else
 	{
 		write_err(minish, 22, minish->table->command->content);

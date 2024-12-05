@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_functions_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:00:28 by tndreka           #+#    #+#             */
-/*   Updated: 2024/11/26 17:27:15 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:10:26 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,21 @@
 bool	handle_heredoc(t_tkn_lst **token, t_mini *msh, t_table **table)
 {
 	char	*separator;
-	char	*line;
 	int		fd;
 
-	line = NULL;
 	fd = -1;
 	(void)table;
-	check_valid_heredoc(token, msh, &separator);
+	if (!check_valid_heredoc(token, msh, &separator))
+		return (false);
 	open_the_fd(&fd, msh, separator);
-	while (true)
+	if (!process_heredoc_input(fd, separator))
 	{
-		line = readline("heredoc> ");
-		if (ft_strcmp(line, separator) == 0)
-		{
-			free(line);
-			break ;
-		}
-		write_line(fd, line);
-		free(line);
+		ft_free(&separator);
+		unlink(".heredoc_tmp");
+		return (false);
 	}
-	msh->in_redir = ft_strdup(".temporary_heredoc");
-	free(separator);
+	msh->in_redir = ft_strdup(".heredoc_tmp");
+	ft_free(&separator);
 	close(fd);
 	return (true);
 }
@@ -49,7 +43,7 @@ void	write_line(int fd, char *line)
 bool	check_valid_heredoc(t_tkn_lst **token, t_mini *msh, char **separator)
 {
 	if ((*token)->next == NULL)
-		write_err(msh, 13, NULL);
+		return (write_err(msh, 13, NULL), false);
 	else if ((*token)->next->tkn != STRING)
 	{
 		write_err(msh, 14, ((*token)->next->content));
@@ -63,7 +57,7 @@ bool	check_valid_heredoc(t_tkn_lst **token, t_mini *msh, char **separator)
 
 bool	open_the_fd(int *fd, t_mini *msh, char *separator)
 {
-	(*fd) = open(".temporary_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	(*fd) = open(".heredoc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if ((*fd) < 0)
 	{
 		write_err(msh, 15, NULL);

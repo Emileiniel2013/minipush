@@ -6,7 +6,7 @@
 /*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:03:28 by temil-da          #+#    #+#             */
-/*   Updated: 2024/11/07 16:39:43 by temil-da         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:35:54 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ char	*ft_check_var_lst(t_mini *mini, char *var)
 			return (new_var);
 		}
 	}
+	add_var_to_list(mini);
 	return (new_var);
 }
 
