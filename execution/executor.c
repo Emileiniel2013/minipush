@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 11:41:14 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/05 19:08:26 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/12/05 20:16:52 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,31 +62,27 @@ void	child_execution(t_mini *minish, int *pipefd, int i)
 
 void	executor(t_mini *minish)
 {
-	if (minish->table != NULL)
-	{
-		if (ft_strcmp(minish->table->command->content, "echo") == 0)
-			handle_echo(minish);
-		else if (ft_strcmp(minish->table->command->content, "pwd") == 0)
-			handle_pwd(minish);
-		else if (ft_strcmp(minish->table->command->content, "cd") == 0)
-			handle_cd(minish);
-		else if (ft_strcmp(minish->table->command->content, "env") == 0)
-			handle_env(minish);
-		else if (ft_strcmp(minish->table->command->content, "export") == 0)
-			handle_export(minish);
-		else if (ft_strcmp(minish->table->command->content, "unset") == 0)
-			handle_unset(minish);
-		else if (ft_strcmp(minish->table->command->content, "exit") == 0)
-			handle_exit(minish);
-		else if ((ft_strncmp(minish->table->command->content, "./", 2)) == 0)
-			execute_file(minish);
-		else if (ft_strchr(minish->table->command->content + 1, '=') != NULL)
-			add_var_to_list(minish);
-		else if (minish->table->command->content[0] == '\0')
-			printf("\n");
-		else
-			check_path(minish);
-	}
+	if (ft_strcmp(minish->table->command->content, "echo") == 0)
+		handle_echo(minish);
+	else if (ft_strcmp(minish->table->command->content, "pwd") == 0)
+		handle_pwd(minish);
+	else if (ft_strcmp(minish->table->command->content, "cd") == 0)
+		handle_cd(minish);
+	else if (ft_strcmp(minish->table->command->content, "env") == 0)
+		handle_env(minish);
+	else if (ft_strcmp(minish->table->command->content, "export") == 0)
+		handle_export(minish);
+	else if (ft_strcmp(minish->table->command->content, "unset") == 0)
+		handle_unset(minish);
+	else if (ft_strcmp(minish->table->command->content, "exit") == 0)
+		handle_exit(minish);
+	else if ((ft_strncmp(minish->table->command->content, "./", 2)) == 0)
+		execute_file(minish);
+	else if (minish->table->command->content[0] != '\0'
+		&& ft_strchr(minish->table->command->content + 1, '=') != NULL)
+		add_var_to_list(minish);
+	else
+		check_path(minish);
 }
 
 void	parent_execution(t_mini *minish, int *pid)

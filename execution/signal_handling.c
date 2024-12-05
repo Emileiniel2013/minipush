@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: temil-da <temil-da@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:10:49 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/04 21:53:49 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/12/05 20:14:23 by temil-da         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	fork_processes(t_mini *minish, int *pipefd, int *pid)
 	int	i;
 
 	i = 0;
-	while (i < minish->pipes + 1)
+	while (i < minish->pipes + 1 && minish->table)
 	{
 		handle_shlvl(minish, '+');
 		pid[i] = fork();
