@@ -6,7 +6,7 @@
 /*   By: tndreka <tndreka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 11:41:14 by temil-da          #+#    #+#             */
-/*   Updated: 2024/12/04 21:59:11 by tndreka          ###   ########.fr       */
+/*   Updated: 2024/12/05 19:08:26 by tndreka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,42 +32,12 @@ void	mini_main(t_mini *minish)
 	free(pipefd);
 	free(pid);
 }
-// void	mini_main(t_mini *minish)
-// {
-// 	int	pipefd[2 * minish->pipes];
-// 	int	pid[minish->pipes + 1];
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < minish->pipes)
-// 	{
-// 		pipe(pipefd + i * 2);
-// 		i++;
-// 	}
-// 	i = 0;
-// 	while (i < minish->pipes + 1)
-// 	{
-// 		handle_shlvl(minish, '+');
-// 		pid[i] = fork();
-// 		if (pid[i] == 0)
-// 			child_execution(minish, pipefd, i);
-// 		minish->table = minish->table->next;
-// 		i++;
-// 	}
-// 	i = 0;
-// 	while (i < 2 * (minish->pipes))
-// 	{
-// 		close(pipefd[i]);
-// 		i++;
-// 	}
-// 	parent_execution(minish, pid);
-// }
 
 void	child_execution(t_mini *minish, int *pipefd, int i)
 {
 	int	j;
 
-	j = 0;
+	j = -1;
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
 	if (i == 0 && minish->infd != STDIN_FILENO)
@@ -84,11 +54,8 @@ void	child_execution(t_mini *minish, int *pipefd, int i)
 	}
 	else if (i < minish->pipes)
 		dup2(pipefd[i * 2 + 1], STDOUT_FILENO);
-	while (j < 2 * minish->pipes)
-	{
+	while (++j < 2 * minish->pipes)
 		close(pipefd[j]);
-		j++;
-	}
 	executor(minish);
 	exit_minish(minish);
 }
